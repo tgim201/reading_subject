@@ -1,0 +1,157 @@
+@prefix ex:   <https://example.org/curriculum/mathematics#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+
+# 2022 개정 중학교 수학과 교육과정의 RDF/RDFS/OWL 구조화
+# 사회과.ttl과 동일한 온톨로지 구조(RDFS/OWL/RDF 인스턴스) 적용
+
+ex:MiddleSchoolMathematicsCurriculum a owl:Ontology ;
+    dc:title "2022 개정 중학교 수학과 교육과정 구조화"@ko ;
+    dc:description "2022 개정 수학과 교육과정에 제시된 수학과 영역, 핵심 아이디어, 내용 범주 및 교과 역량을 RDF/RDFS/OWL로 표현한 온톨로지"@ko .
+
+# --- RDFS: 클래스 정의 ---
+ex:Curriculum a owl:Class ; rdfs:label "교육과정"@ko .
+ex:Subject a owl:Class ; rdfs:subClassOf ex:Curriculum ; rdfs:label "교과"@ko .
+ex:LearningArea a owl:Class ; rdfs:label "내용 영역"@ko .
+ex:CoreIdea a owl:Class ; rdfs:label "핵심 아이디어"@ko .
+ex:ContentElement a owl:Class ; rdfs:label "내용 요소"@ko .
+ex:Competency a owl:Class ; rdfs:label "역량"@ko .
+ex:ProcessSkill a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "과정·기능"@ko .
+ex:ValueAttitude a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "가치·태도"@ko .
+ex:KnowledgeUnderstanding a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "지식·이해"@ko .
+
+ex:hasArea a owl:ObjectProperty ;
+    rdfs:domain ex:Subject ; rdfs:range ex:LearningArea ; rdfs:label "포함 영역"@ko .
+ex:hasCoreIdea a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:CoreIdea ; rdfs:label "핵심 아이디어"@ko .
+ex:hasContentElement a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:ContentElement ; rdfs:label "내용 요소"@ko .
+ex:developsCompetency a owl:ObjectProperty ;
+    rdfs:domain ex:Subject ; rdfs:range ex:Competency ; rdfs:label "함양 역량"@ko .
+ex:relatedToArea a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:LearningArea ; rdfs:label "관련 영역"@ko .
+ex:gradeBand a owl:DatatypeProperty ;
+    rdfs:domain ex:ContentElement ; rdfs:range xsd:string ; rdfs:label "학년군"@ko .
+ex:description a owl:DatatypeProperty ;
+    rdfs:range xsd:string ; rdfs:label "설명"@ko .
+
+# --- OWL: 의미 제약 및 관계 ---
+ex:LearningArea owl:disjointWith ex:CoreIdea, ex:ContentElement, ex:Competency .
+ex:CoreIdea owl:disjointWith ex:ContentElement, ex:Competency .
+ex:KnowledgeUnderstanding owl:disjointWith ex:ProcessSkill, ex:ValueAttitude .
+ex:ProcessSkill owl:disjointWith ex:ValueAttitude .
+
+ex:MathematicsSubject a owl:Class ;
+    rdfs:subClassOf ex:Subject ,
+      [ a owl:Restriction ; owl:onProperty ex:hasArea ;
+        owl:qualifiedCardinality "5"^^xsd:nonNegativeInteger ;
+        owl:onClass ex:LearningArea ] .
+
+# --- RDF: 교과 및 영역 인스턴스 ---
+ex:Mathematics a ex:Subject, ex:MathematicsSubject ;
+    rdfs:label "수학"@ko ;
+    ex:description "수학적 개념, 원리, 법칙을 이해하고 수학적 사고와 추론을 통해 문제를 해결하며 수학의 유용성과 심미성을 인식하는 교과"@ko ;
+    ex:hasArea ex:NumberAndOperation, ex:ChangesAndRelationships, ex:Geometry, ex:DataAndChance ;
+    ex:developsCompetency ex:ProblemSolving, ex:Reasoning, ex:Communication, ex:Connection, ex:InformationProcessing ;
+    ex:hasContentElement ex:RecognizeMathematicalProblems, ex:ReflectAndEvaluateSolution, ex:InductiveDeductiveReasoning,
+        ex:ExpressInMathematicalLanguage, ex:ConnectMathWithLife, ex:UseDigitalTools,
+        ex:InterestAndCuriosity, ex:ConfidenceAndPersistence, ex:ReflectiveAttitude, ex:CollaborationAndRespect .
+
+# 1. 수와 연산 (Number and Operation)
+ex:NumberAndOperation a ex:LearningArea ;
+    rdfs:label "수와 연산"@ko ;
+    ex:hasCoreIdea ex:NumberSystemExpansionCoreIdea, ex:FourOperationsPropertiesCoreIdea ;
+    ex:hasContentElement ex:PrimeFactorization, ex:IntegersAndRationalNumbers, ex:RealNumbersAndOperations ;
+    ex:relatedToArea ex:ChangesAndRelationships .
+
+# 2. 변화와 관계 (문자와 식, 함수 포함)
+ex:ChangesAndRelationships a ex:LearningArea ;
+    rdfs:label "변화와 관계"@ko ;
+    ex:hasCoreIdea ex:AlgebraicExpressionCoreIdea, ex:EquationInequalityCoreIdea, ex:FunctionChangeCoreIdea ;
+    ex:hasContentElement ex:LinearEquationInOneVariable, ex:CoordinatesAndGraphs, ex:SimultaneousLinearEquations,
+        ex:LinearInequalities, ex:LinearFunctionAndGraph, ex:QuadraticEquation, ex:QuadraticFunctionAndGraph ;
+    ex:relatedToArea ex:NumberAndOperation, ex:Geometry .
+
+# 3. 도형 (기하)
+ex:Geometry a ex:LearningArea ;
+    rdfs:label "도형"@ko ;
+    ex:hasCoreIdea ex:GeometricFiguresPropertiesCoreIdea, ex:MeasurementTransformationCoreIdea, ex:DeductiveProofCoreIdea ;
+    ex:hasContentElement ex:BasicFigures, ex:PropertiesOfTrianglesAndQuadrilaterals, ex:SimilarityOfFigures,
+        ex:PythagoreanTheorem, ex:TrigonometricRatios, ex:CircleProperties ;
+    ex:relatedToArea ex:ChangesAndRelationships, ex:DataAndChance .
+
+# 4. 자료와 가능성 (확률과 통계)
+ex:DataAndChance a ex:LearningArea ;
+    rdfs:label "자료와 가능성"@ko ;
+    ex:hasCoreIdea ex:DataCollectionAnalysisCoreIdea, ex:ProbabilityPredictionCoreIdea ;
+    ex:hasContentElement ex:StatisticalDataRepresentation, ex:RelativeFrequency, ex:ProbabilityAndProperties,
+        ex:RepresentativeValuesAndDispersion, ex:ScatterPlotAndCorrelation ;
+    ex:relatedToArea ex:Geometry .
+
+# --- 핵심 아이디어 (원문 핵심 진술 요약) ---
+ex:NumberSystemExpansionCoreIdea a ex:CoreIdea ;
+    ex:description "자연수에서 정수, 유리수, 실수로 수 체계가 확장되며 연산의 원리와 체계가 일관되게 적용된다."@ko .
+ex:FourOperationsPropertiesCoreIdea a ex:CoreIdea ;
+    ex:description "사칙계산은 수와 식의 대수적 구조를 이해하고 다양한 문제를 해결하는 기초가 된다."@ko .
+ex:AlgebraicExpressionCoreIdea a ex:CoreIdea ;
+    ex:description "문자를 사용한 식은 수량 관계와 규칙성을 일반화하여 효율적으로 나타내는 도구이다."@ko .
+ex:EquationInequalityCoreIdea a ex:CoreIdea ;
+    ex:description "방정식과 부등식은 미지의 값을 구하거나 조건에 따른 해의 범위를 찾는 유용한 모델링 도구이다."@ko .
+ex:FunctionChangeCoreIdea a ex:CoreIdea ;
+    ex:description "함수는 두 양 사이의 종속적 변화 관계를 수학적으로 모델링하고 분석하는 핵심 개념이다."@ko .
+ex:GeometricFiguresPropertiesCoreIdea a ex:CoreIdea ;
+    ex:description "평면 및 입체도형의 기본 성질을 탐구하고 이를 바탕으로 공간 감각과 기하학적 직관을 형성한다."@ko .
+ex:MeasurementTransformationCoreIdea a ex:CoreIdea ;
+    ex:description "길이, 넓이, 부피의 측정과 합동·닮음 변환을 통해 도형 간의 관계를 분석한다."@ko .
+ex:DeductiveProofCoreIdea a ex:CoreIdea ;
+    ex:description "도형의 성질을 명확한 정의와 논리적 절차(증명)를 통해 연역적으로 정당화한다."@ko .
+ex:DataCollectionAnalysisCoreIdea a ex:CoreIdea ;
+    ex:description "목적에 맞게 수집된 자료를 정리·요약하고 대푯값과 산포도를 통해 자료의 분포 특성을 파악한다."@ko .
+ex:ProbabilityPredictionCoreIdea a ex:CoreIdea ;
+    ex:description "우연한 사건의 불확실성을 수치화(확률)하여 미래의 사건을 합리적으로 예측하고 의사결정에 활용한다."@ko .
+
+# --- 내용 요소: 지식·이해 (중학교 1~3학년) ---
+ex:PrimeFactorization a ex:KnowledgeUnderstanding ; rdfs:label "소인수분해와 최대공약수·최소공배수"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:IntegersAndRationalNumbers a ex:KnowledgeUnderstanding ; rdfs:label "정수와 유리수의 개념 및 사칙계산"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:RealNumbersAndOperations a ex:KnowledgeUnderstanding ; rdfs:label "제곱근과 실수, 근호를 포함한 식의 계산"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:LinearEquationInOneVariable a ex:KnowledgeUnderstanding ; rdfs:label "문자의 사용과 일차방정식"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:CoordinatesAndGraphs a ex:KnowledgeUnderstanding ; rdfs:label "좌표평면과 그래프"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:SimultaneousLinearEquations a ex:KnowledgeUnderstanding ; rdfs:label "미지수가 2개인 연립일차방정식"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:LinearInequalities a ex:KnowledgeUnderstanding ; rdfs:label "일차부등식과 그 활용"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:LinearFunctionAndGraph a ex:KnowledgeUnderstanding ; rdfs:label "일차함수의 그래프와 활용, 연립방정식과의 관계"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:QuadraticEquation a ex:KnowledgeUnderstanding ; rdfs:label "이차방정식의 풀이와 활용"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:QuadraticFunctionAndGraph a ex:KnowledgeUnderstanding ; rdfs:label "이차함수의 그래프와 최대·최소"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:BasicFigures a ex:KnowledgeUnderstanding ; rdfs:label "점, 선, 면, 각과 위치 관계, 작도와 합동"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:PropertiesOfTrianglesAndQuadrilaterals a ex:KnowledgeUnderstanding ; rdfs:label "삼각형의 성질(외심·내심)과 사각형의 성질"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:SimilarityOfFigures a ex:KnowledgeUnderstanding ; rdfs:label "도형의 닮음과 닮음의 활용"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:PythagoreanTheorem a ex:KnowledgeUnderstanding ; rdfs:label "피타고라스 정리와 그 정당화"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:TrigonometricRatios a ex:KnowledgeUnderstanding ; rdfs:label "삼각비(sin, cos, tan)와 실생활 활용"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:CircleProperties a ex:KnowledgeUnderstanding ; rdfs:label "원의 현, 접선, 원주각의 성질"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:StatisticalDataRepresentation a ex:KnowledgeUnderstanding ; rdfs:label "줄기와 잎 그림, 도수분포표, 히스토그램"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:RelativeFrequency a ex:KnowledgeUnderstanding ; rdfs:label "상대도수와 그 분포"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:ProbabilityAndProperties a ex:KnowledgeUnderstanding ; rdfs:label "경우의 수와 확률의 기본 성질"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:RepresentativeValuesAndDispersion a ex:KnowledgeUnderstanding ; rdfs:label "대푯값(평균, 중앙값, 최빈값)과 산포도(분산, 표준편차)"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:ScatterPlotAndCorrelation a ex:KnowledgeUnderstanding ; rdfs:label "산점도와 상관관계"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+
+# --- 수학과 교과 역량 (5개) ---
+ex:ProblemSolving a ex:Competency ; rdfs:label "문제해결 역량"@ko .
+ex:Reasoning a ex:Competency ; rdfs:label "추론 역량"@ko .
+ex:Communication a ex:Competency ; rdfs:label "의사소통 역량"@ko .
+ex:Connection a ex:Competency ; rdfs:label "연결 역량"@ko .
+ex:InformationProcessing a ex:Competency ; rdfs:label "정보처리 역량"@ko .
+
+# --- 내용 요소: 과정·기능 및 가치·태도 ---
+ex:RecognizeMathematicalProblems a ex:ProcessSkill ; rdfs:label "수학적 문제 인식 및 전략 탐색"@ko .
+ex:ReflectAndEvaluateSolution a ex:ProcessSkill ; rdfs:label "해결 과정 반성 및 결과 평가"@ko .
+ex:InductiveDeductiveReasoning a ex:ProcessSkill ; rdfs:label "귀납·연역적 추론 및 정당화"@ko .
+ex:ExpressInMathematicalLanguage a ex:ProcessSkill ; rdfs:label "수학적 표현과 일상 언어의 상호 변환 및 소통"@ko .
+ex:ConnectMathWithLife a ex:ProcessSkill ; rdfs:label "수학과 타 교과 및 실생활 문제 연계"@ko .
+ex:UseDigitalTools a ex:ProcessSkill ; rdfs:label "공학 도구(지오지브라, 통계 소프트웨어 등)를 활용한 탐구"@ko .
+
+ex:InterestAndCuriosity a ex:ValueAttitude ; rdfs:label "수학에 대한 흥미와 호기심"@ko .
+ex:ConfidenceAndPersistence a ex:ValueAttitude ; rdfs:label "수학적 자신감과 끈기"@ko .
+ex:ReflectiveAttitude a ex:ValueAttitude ; rdfs:label "비판적 반성과 합리적 태도"@ko .
+ex:CollaborationAndRespect a ex:ValueAttitude ; rdfs:label "수학적 의사소통에서의 상호 존중과 협업"@ko .

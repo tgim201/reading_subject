@@ -1,0 +1,309 @@
+@prefix ex:   <http://example.org/instruction-strategy#> .
+@prefix read: <http://example.org/reading#> .
+@prefix pisa: <http://example.org/pisa#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+
+ex:CurriculumInstructionStrategyOntology a owl:Ontology ;
+    dc:title "교과 기능 및 정보 장르 연계 수업전략 온톨로지"@ko ;
+    dc:description "교과 교육과정의 과정·기능어와 정보 장르, 대상 학년, 정보활용교육 단계를 연결한 수업전략 온톨로지"@ko .
+
+# --- Classes ---
+ex:InstructionalStrategy a owl:Class ; rdfs:label "수업 전략"@ko .
+ex:CurriculumSkillVerb a owl:Class ; rdfs:label "교과 기능 동사"@ko .
+ex:InformationGenre a owl:Class ; rdfs:label "정보 장르"@ko .
+
+# --- Properties ---
+ex:hasSkillVerb a owl:ObjectProperty ;
+    rdfs:domain ex:InstructionalStrategy ;
+    rdfs:range ex:CurriculumSkillVerb ;
+    rdfs:label "연결 기능어"@ko .
+
+ex:hasGenre a owl:ObjectProperty ;
+    rdfs:domain ex:InstructionalStrategy ;
+    rdfs:range ex:InformationGenre ;
+    rdfs:label "적합 정보 장르"@ko .
+
+ex:targetSchoolLevel a owl:DatatypeProperty ;
+    rdfs:domain ex:InstructionalStrategy ;
+    rdfs:range xsd:string ;
+    rdfs:label "대상 학년군"@ko .
+
+ex:infoLiteracyStage a owl:DatatypeProperty ;
+    rdfs:domain ex:InstructionalStrategy ;
+    rdfs:range xsd:string ;
+    rdfs:label "정보활용교육 단계"@ko .
+
+ex:strategyDescription a owl:DatatypeProperty ;
+    rdfs:domain ex:InstructionalStrategy ;
+    rdfs:range xsd:string ;
+    rdfs:label "전략 설명"@ko .
+
+# --- Instances: Verbs (41개 기능어) ---
+ex:Verb_감상하기 a ex:CurriculumSkillVerb ; rdfs:label "감상하기"@ko .
+ex:Verb_계획하기 a ex:CurriculumSkillVerb ; rdfs:label "계획하기"@ko .
+ex:Verb_고려하기 a ex:CurriculumSkillVerb ; rdfs:label "고려하기"@ko .
+ex:Verb_공유하기 a ex:CurriculumSkillVerb ; rdfs:label "공유하기"@ko .
+ex:Verb_관련짓기 a ex:CurriculumSkillVerb ; rdfs:label "관련짓기"@ko .
+ex:Verb_교환하기 a ex:CurriculumSkillVerb ; rdfs:label "교환하기"@ko .
+ex:Verb_구별하기 a ex:CurriculumSkillVerb ; rdfs:label "구별하기"@ko .
+ex:Verb_구성하기 a ex:CurriculumSkillVerb ; rdfs:label "구성하기"@ko .
+ex:Verb_말하기 a ex:CurriculumSkillVerb ; rdfs:label "말하기"@ko .
+ex:Verb_분류하기 a ex:CurriculumSkillVerb ; rdfs:label "분류하기"@ko .
+ex:Verb_분석하기 a ex:CurriculumSkillVerb ; rdfs:label "분석하기"@ko .
+ex:Verb_비교하기 a ex:CurriculumSkillVerb ; rdfs:label "비교하기"@ko .
+ex:Verb_생각하기 a ex:CurriculumSkillVerb ; rdfs:label "생각하기"@ko .
+ex:Verb_생성하기 a ex:CurriculumSkillVerb ; rdfs:label "생성하기"@ko .
+ex:Verb_선별하기 a ex:CurriculumSkillVerb ; rdfs:label "선별하기"@ko .
+ex:Verb_설명하기 a ex:CurriculumSkillVerb ; rdfs:label "설명하기"@ko .
+ex:Verb_소통하기 a ex:CurriculumSkillVerb ; rdfs:label "소통하기"@ko .
+ex:Verb_수집하기 a ex:CurriculumSkillVerb ; rdfs:label "수집하기"@ko .
+ex:Verb_식별하기 a ex:CurriculumSkillVerb ; rdfs:label "식별하기"@ko .
+ex:Verb_연결하기 a ex:CurriculumSkillVerb ; rdfs:label "연결하기"@ko .
+ex:Verb_예측하기 a ex:CurriculumSkillVerb ; rdfs:label "예측하기"@ko .
+ex:Verb_요약하기 a ex:CurriculumSkillVerb ; rdfs:label "요약하기"@ko .
+ex:Verb_이해하기 a ex:CurriculumSkillVerb ; rdfs:label "이해하기"@ko .
+ex:Verb_읽기 a ex:CurriculumSkillVerb ; rdfs:label "읽기"@ko .
+ex:Verb_전달하기 a ex:CurriculumSkillVerb ; rdfs:label "전달하기"@ko .
+ex:Verb_정리하기 a ex:CurriculumSkillVerb ; rdfs:label "정리하기"@ko .
+ex:Verb_제시하기 a ex:CurriculumSkillVerb ; rdfs:label "제시하기"@ko .
+ex:Verb_제작하기 a ex:CurriculumSkillVerb ; rdfs:label "제작하기"@ko .
+ex:Verb_조사하기 a ex:CurriculumSkillVerb ; rdfs:label "조사하기"@ko .
+ex:Verb_조정하기 a ex:CurriculumSkillVerb ; rdfs:label "조정하기"@ko .
+ex:Verb_조직하기 a ex:CurriculumSkillVerb ; rdfs:label "조직하기"@ko .
+ex:Verb_주장하기 a ex:CurriculumSkillVerb ; rdfs:label "주장하기"@ko .
+ex:Verb_질문하기 a ex:CurriculumSkillVerb ; rdfs:label "질문하기"@ko .
+ex:Verb_참여하기 a ex:CurriculumSkillVerb ; rdfs:label "참여하기"@ko .
+ex:Verb_추론하기 a ex:CurriculumSkillVerb ; rdfs:label "추론하기"@ko .
+ex:Verb_탐색하기 a ex:CurriculumSkillVerb ; rdfs:label "탐색하기"@ko .
+ex:Verb_토론하기 a ex:CurriculumSkillVerb ; rdfs:label "토론하기"@ko .
+ex:Verb_파악하기 a ex:CurriculumSkillVerb ; rdfs:label "파악하기"@ko .
+ex:Verb_평가하기 a ex:CurriculumSkillVerb ; rdfs:label "평가하기"@ko .
+ex:Verb_표현하기 a ex:CurriculumSkillVerb ; rdfs:label "표현하기"@ko .
+ex:Verb_해결하기 a ex:CurriculumSkillVerb ; rdfs:label "해결하기"@ko .
+
+# --- Instances: Information Genres ---
+ex:Genre_논픽션 a ex:InformationGenre ; rdfs:label "논픽션"@ko .
+ex:Genre_논픽션_원인_결과 a ex:InformationGenre ; rdfs:label "논픽션(원인-결과)"@ko .
+ex:Genre_논픽션_비교_대조 a ex:InformationGenre ; rdfs:label "논픽션(비교-대조)"@ko .
+ex:Genre_논픽션_설명문 a ex:InformationGenre ; rdfs:label "논픽션(설명문)"@ko .
+ex:Genre_논픽션_주장_근거 a ex:InformationGenre ; rdfs:label "논픽션(주장-근거)"@ko .
+ex:Genre_픽션 a ex:InformationGenre ; rdfs:label "픽션"@ko .
+ex:Genre_픽션_단편 a ex:InformationGenre ; rdfs:label "픽션(단편)"@ko .
+
+# --- Instances: Instructional Strategies (29개 수업 전략) ---
+
+ex:Strat_KWLS a ex:InstructionalStrategy ;
+    rdfs:label "KWLS"@ko ;
+    ex:strategyDescription "KWL에 S(Still wondering) 추가해 '아직 궁금한 것' 을 기록"@ko ;
+    ex:targetSchoolLevel "전학년"@ko ;
+    ex:infoLiteracyStage "1.0"@ko ;
+    ex:hasSkillVerb ex:Verb_예측하기, ex:Verb_질문하기, ex:Verb_탐색하기 ;
+    ex:hasGenre ex:Genre_논픽션_주장_근거 .
+
+ex:Strat_SQ3R a ex:InstructionalStrategy ;
+    rdfs:label "SQ3R"@ko ;
+    ex:strategyDescription "Survey-Question-Read-Recite-Review 5단계로 읽기 전·중·후 활동 구조화"@ko ;
+    ex:targetSchoolLevel "고"@ko ;
+    ex:infoLiteracyStage "1.0"@ko ;
+    ex:hasSkillVerb ex:Verb_읽기, ex:Verb_파악하기, ex:Verb_질문하기, ex:Verb_요약하기 ;
+    ex:hasGenre ex:Genre_논픽션_주장_근거 .
+
+ex:Strat_그래픽_조직자 a ex:InstructionalStrategy ;
+    rdfs:label "그래픽 조직자"@ko ;
+    ex:strategyDescription "순서·비교·인과 등 정보 유형별 도표 활용"@ko ;
+    ex:targetSchoolLevel "전학년"@ko ;
+    ex:infoLiteracyStage "1.0"@ko ;
+    ex:hasSkillVerb ex:Verb_정리하기, ex:Verb_분류하기, ex:Verb_조직하기, ex:Verb_조사하기 ;
+    ex:hasGenre ex:Genre_논픽션_원인_결과, ex:Genre_논픽션_비교_대조 .
+
+ex:Strat_벤다이어그램 a ex:InstructionalStrategy ;
+    rdfs:label "벤다이어그램"@ko ;
+    ex:strategyDescription "중첩 원으로 두 개념 공통점·차이점 시각화"@ko ;
+    ex:targetSchoolLevel "전학년"@ko ;
+    ex:infoLiteracyStage "1.0"@ko ;
+    ex:hasSkillVerb ex:Verb_비교하기, ex:Verb_구별하기, ex:Verb_분류하기 ;
+    ex:hasGenre ex:Genre_논픽션_비교_대조 .
+
+ex:Strat_사슬_그리기 a ex:InstructionalStrategy ;
+    rdfs:label "사슬 그리기"@ko ;
+    ex:strategyDescription "사건의 인과를 연속 고리로 시각화"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:infoLiteracyStage "1.0"@ko ;
+    ex:hasSkillVerb ex:Verb_연결하기, ex:Verb_이해하기, ex:Verb_파악하기 ;
+    ex:hasGenre ex:Genre_논픽션_원인_결과 .
+
+ex:Strat_생각_그물망 a ex:InstructionalStrategy ;
+    rdfs:label "생각 그물망"@ko ;
+    ex:strategyDescription "알고 있는 개념과 새 정보를 선으로 연결해 개념 관계 시각화"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:infoLiteracyStage "1.0"@ko ;
+    ex:hasSkillVerb ex:Verb_연결하기, ex:Verb_추론하기, ex:Verb_조직하기, ex:Verb_조사하기 ;
+    ex:hasGenre ex:Genre_논픽션_비교_대조, ex:Genre_논픽션_원인_결과 .
+
+ex:Strat_라면_대화 a ex:InstructionalStrategy ;
+    rdfs:label "라면 대화"@ko ;
+    ex:strategyDescription "‘만약~라면?’ 가정으로 사고 확장"@ko ;
+    ex:targetSchoolLevel "전학년"@ko ;
+    ex:infoLiteracyStage "2.0"@ko ;
+    ex:hasSkillVerb ex:Verb_생각하기, ex:Verb_추론하기, ex:Verb_토론하기 ;
+    ex:hasGenre ex:Genre_논픽션, ex:Genre_픽션 .
+
+ex:Strat_4칸_문제해결 a ex:InstructionalStrategy ;
+    rdfs:label "4칸 문제해결"@ko ;
+    ex:strategyDescription "문제–조건–풀이–해결을 4개면에 정리"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_해결하기, ex:Verb_조직하기, ex:Verb_설명하기 ;
+    ex:hasGenre ex:Genre_논픽션_원인_결과 .
+
+ex:Strat_PMI a ex:InstructionalStrategy ;
+    rdfs:label "PMI"@ko ;
+    ex:strategyDescription "Plus/Minus/Interesting 관점으로 제안 평가"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_평가하기, ex:Verb_고려하기, ex:Verb_분석하기 ;
+    ex:hasGenre ex:Genre_논픽션, ex:Genre_픽션 .
+
+ex:Strat_Y차트_확장 a ex:InstructionalStrategy ;
+    rdfs:label "Y차트 확장"@ko ;
+    ex:strategyDescription "보이는/느끼는/상상하는 칸에 작성 후 아이디어 연결 및 질문 추가"@ko ;
+    ex:targetSchoolLevel "저·중"@ko ;
+    ex:hasSkillVerb ex:Verb_감상하기, ex:Verb_분석하기, ex:Verb_표현하기 ;
+    ex:hasGenre ex:Genre_픽션, ex:Genre_논픽션_비교_대조 .
+
+ex:Strat_네모퉁이_토론 a ex:InstructionalStrategy ;
+    rdfs:label "네모퉁이 토론"@ko ;
+    ex:strategyDescription "4입장 위치 선정 후 근거 토의"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_비교하기, ex:Verb_조정하기, ex:Verb_주장하기 ;
+    ex:hasGenre ex:Genre_논픽션, ex:Genre_픽션 .
+
+ex:Strat_띵페세_Think_Pair_Share a ex:InstructionalStrategy ;
+    rdfs:label "띵페세(Think-Pair-Share)"@ko ;
+    ex:strategyDescription "개별 사고→짝 토의→전체 공유 3단계"@ko ;
+    ex:targetSchoolLevel "전학년"@ko ;
+    ex:infoLiteracyStage "1.0"@ko ;
+    ex:hasSkillVerb ex:Verb_말하기, ex:Verb_소통하기, ex:Verb_공유하기 ;
+    ex:hasGenre ex:Genre_논픽션, ex:Genre_픽션 .
+
+ex:Strat_말풍선_설명 a ex:InstructionalStrategy ;
+    rdfs:label "말풍선 설명"@ko ;
+    ex:strategyDescription "말풍선으로 설명 이어붙여 작성하거나 다른의견 제시"@ko ;
+    ex:targetSchoolLevel "저·중"@ko ;
+    ex:hasSkillVerb ex:Verb_표현하기, ex:Verb_설명하기, ex:Verb_생각하기 ;
+    ex:hasGenre ex:Genre_픽션 .
+
+ex:Strat_미니북_제작 a ex:InstructionalStrategy ;
+    rdfs:label "미니북 제작"@ko ;
+    ex:strategyDescription "A4 한 장 접어 만든 8p 소책자 제작"@ko ;
+    ex:targetSchoolLevel "저·중"@ko ;
+    ex:hasSkillVerb ex:Verb_제작하기, ex:Verb_구성하기, ex:Verb_표현하기 ;
+    ex:hasGenre ex:Genre_논픽션, ex:Genre_픽션 .
+
+ex:Strat_브레인라이팅_6_3_5 a ex:InstructionalStrategy ;
+    rdfs:label "브레인라이팅 (6-3-5)"@ko ;
+    ex:strategyDescription "6명·3아이디어·5분 릴레이 작성"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_생성하기, ex:Verb_연결하기, ex:Verb_공유하기 ;
+    ex:hasGenre ex:Genre_논픽션, ex:Genre_픽션 .
+
+ex:Strat_스케치_노트 a ex:InstructionalStrategy ;
+    rdfs:label "스케치 노트"@ko ;
+    ex:strategyDescription "그림+텍스트로 핵심 정보 시각 요약"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_표현하기, ex:Verb_요약하기, ex:Verb_정리하기, ex:Verb_조사하기 ;
+    ex:hasGenre ex:Genre_픽션, ex:Genre_논픽션_설명문 .
+
+ex:Strat_아하_대화 a ex:InstructionalStrategy ;
+    rdfs:label "아하 대화"@ko ;
+    ex:strategyDescription "아하!라고 답하며 설명듣기"@ko ;
+    ex:targetSchoolLevel "전학년"@ko ;
+    ex:infoLiteracyStage "1.0"@ko ;
+    ex:hasSkillVerb ex:Verb_소통하기, ex:Verb_조정하기, ex:Verb_참여하기 ;
+    ex:hasGenre ex:Genre_논픽션, ex:Genre_픽션 .
+
+ex:Strat_월드카페 a ex:InstructionalStrategy ;
+    rdfs:label "월드카페"@ko ;
+    ex:strategyDescription "테이블 순환 대화로 아이디어 확산"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_교환하기, ex:Verb_조정하기, ex:Verb_참여하기 ;
+    ex:hasGenre ex:Genre_논픽션, ex:Genre_픽션 .
+
+ex:Strat_의견벽 a ex:InstructionalStrategy ;
+    rdfs:label "의견벽"@ko ;
+    ex:strategyDescription "포스트잇 등등으로 의견 수렴 후 분류"@ko ;
+    ex:targetSchoolLevel "전학년"@ko ;
+    ex:hasSkillVerb ex:Verb_공유하기, ex:Verb_분류하기, ex:Verb_관련짓기 ;
+    ex:hasGenre ex:Genre_논픽션_비교_대조 .
+
+ex:Strat_이야기별_그리기 a ex:InstructionalStrategy ;
+    rdfs:label "이야기별 그리기"@ko ;
+    ex:strategyDescription "이야기나 관찰 내용을 읽고 이해한 후, 사건의 흐름을 재구성함"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_이해하기, ex:Verb_표현하기, ex:Verb_추론하기, ex:Verb_분석하기, ex:Verb_정리하기 ;
+    ex:hasGenre ex:Genre_픽션 .
+
+ex:Strat_정보_스케치 a ex:InstructionalStrategy ;
+    rdfs:label "정보 스케치"@ko ;
+    ex:strategyDescription "키워드·아이콘 자유 배치로 정보 구조 시각화"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_표현하기, ex:Verb_조직하기, ex:Verb_정리하기, ex:Verb_조사하기 ;
+    ex:hasGenre ex:Genre_논픽션_비교_대조 .
+
+ex:Strat_정보_장바구니 a ex:InstructionalStrategy ;
+    rdfs:label "정보 장바구니"@ko ;
+    ex:strategyDescription "시각적 공간에 자료를 수집·분류"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_수집하기, ex:Verb_분류하기, ex:Verb_선별하기 ;
+    ex:hasGenre ex:Genre_논픽션_주장_근거 .
+
+ex:Strat_질문_그물망 a ex:InstructionalStrategy ;
+    rdfs:label "질문 그물망"@ko ;
+    ex:strategyDescription "중심 질문에서 파생 질문을 그물 형태로 확장"@ko ;
+    ex:targetSchoolLevel "전학년"@ko ;
+    ex:hasSkillVerb ex:Verb_질문하기, ex:Verb_생성하기, ex:Verb_탐색하기 ;
+    ex:hasGenre ex:Genre_논픽션_주장_근거 .
+
+ex:Strat_질문_해부_전략 a ex:InstructionalStrategy ;
+    rdfs:label "질문 해부 전략"@ko ;
+    ex:strategyDescription "누가?·왜?,어떻게? 등으로 질문 세분화[5W1H]"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_질문하기, ex:Verb_분석하기 ;
+    ex:hasGenre ex:Genre_논픽션 .
+
+ex:Strat_출처_추적 a ex:InstructionalStrategy ;
+    rdfs:label "출처 추적"@ko ;
+    ex:strategyDescription "정보출처를 시각화하여 정보의 신뢰성 판단"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_조사하기, ex:Verb_분석하기, ex:Verb_정리하기, ex:Verb_평가하기 ;
+    ex:hasGenre ex:Genre_논픽션, ex:Genre_픽션 .
+
+ex:Strat_토큰_대화 a ex:InstructionalStrategy ;
+    rdfs:label "토큰 대화"@ko ;
+    ex:strategyDescription "토큰을 가지고 타인과 대화를 진행"@ko ;
+    ex:targetSchoolLevel "전학년"@ko ;
+    ex:hasSkillVerb ex:Verb_소통하기, ex:Verb_공유하기, ex:Verb_설명하기 ;
+    ex:hasGenre ex:Genre_논픽션, ex:Genre_픽션 .
+
+ex:Strat_프레이어_모델 a ex:InstructionalStrategy ;
+    rdfs:label "프레이어 모델"@ko ;
+    ex:strategyDescription "핵심개념을 바탕으로 4개면에 정의, 속성, 해당사례, 해당하지 않는 것을 기재"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_분류하기, ex:Verb_식별하기, ex:Verb_이해하기 ;
+    ex:hasGenre ex:Genre_논픽션_비교_대조 .
+
+ex:Strat_프로젝트_보드 a ex:InstructionalStrategy ;
+    rdfs:label "프로젝트 보드"@ko ;
+    ex:strategyDescription "단계별 과정 사진·메모를 스티커에 기록해 게시"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_정리하기, ex:Verb_계획하기, ex:Verb_공유하기 ;
+    ex:hasGenre ex:Genre_논픽션_설명문 .
+
+ex:Strat_핵심_한_장_카드 a ex:InstructionalStrategy ;
+    rdfs:label "핵심 한 장 카드"@ko ;
+    ex:strategyDescription "중요 개념을 카드 한 장에 요약 전시·교환"@ko ;
+    ex:targetSchoolLevel "중·고"@ko ;
+    ex:hasSkillVerb ex:Verb_제시하기, ex:Verb_설명하기, ex:Verb_전달하기 ;
+    ex:hasGenre ex:Genre_픽션_단편, ex:Genre_논픽션_설명문 .

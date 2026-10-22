@@ -1,0 +1,181 @@
+@prefix ex:   <https://example.org/curriculum/technology-home-economics#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+
+# 2022 개정 중학교 기술·가정과 교육과정 구조화
+# 사회과.ttl과 동일한 RDFS/OWL/RDF 온톨로지 구조 적용
+
+ex:MiddleSchoolTechnologyHomeEconomicsCurriculum a owl:Ontology ;
+    dc:title "2022 개정 중학교 기술·가정과 교육과정 구조화"@ko ;
+    dc:description "2022 개정 기술·가정과 교육과정에 제시된 영역, 핵심 아이디어, 내용 범주 및 교과 역량을 RDF/RDFS/OWL로 표현한 온톨로지"@ko .
+
+# --- RDFS: 클래스 정의 ---
+ex:Curriculum a owl:Class ; rdfs:label "교육과정"@ko .
+ex:Subject a owl:Class ; rdfs:subClassOf ex:Curriculum ; rdfs:label "교과"@ko .
+ex:LearningArea a owl:Class ; rdfs:label "내용 영역"@ko .
+ex:CoreIdea a owl:Class ; rdfs:label "핵심 아이디어"@ko .
+ex:ContentElement a owl:Class ; rdfs:label "내용 요소"@ko .
+ex:Competency a owl:Class ; rdfs:label "역량"@ko .
+ex:ProcessSkill a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "과정·기능"@ko .
+ex:ValueAttitude a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "가치·태도"@ko .
+ex:KnowledgeUnderstanding a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "지식·이해"@ko .
+
+# --- 속성 정의 ---
+ex:hasArea a owl:ObjectProperty ;
+    rdfs:domain ex:Subject ; rdfs:range ex:LearningArea ; rdfs:label "포함 영역"@ko .
+ex:hasCoreIdea a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:CoreIdea ; rdfs:label "핵심 아이디어"@ko .
+ex:hasContentElement a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:ContentElement ; rdfs:label "내용 요소"@ko .
+ex:developsCompetency a owl:ObjectProperty ;
+    rdfs:domain ex:Subject ; rdfs:range ex:Competency ; rdfs:label "함양 역량"@ko .
+ex:relatedToArea a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:LearningArea ; rdfs:label "관련 영역"@ko .
+ex:gradeBand a owl:DatatypeProperty ;
+    rdfs:domain ex:ContentElement ; rdfs:range xsd:string ; rdfs:label "학년군"@ko .
+ex:description a owl:DatatypeProperty ;
+    rdfs:range xsd:string ; rdfs:label "설명"@ko .
+
+# --- OWL: 클래스 간 배타성 제약 ---
+ex:LearningArea owl:disjointWith ex:CoreIdea, ex:ContentElement, ex:Competency .
+ex:CoreIdea owl:disjointWith ex:ContentElement, ex:Competency .
+ex:KnowledgeUnderstanding owl:disjointWith ex:ProcessSkill, ex:ValueAttitude .
+ex:ProcessSkill owl:disjointWith ex:ValueAttitude .
+
+ex:TechnologyHomeEconomicsSubject a owl:Class ;
+    rdfs:subClassOf ex:Subject ,
+      [ a owl:Restriction ; owl:onProperty ex:hasArea ;
+        owl:qualifiedCardinality "6"^^xsd:nonNegativeInteger ;
+        owl:onClass ex:LearningArea ] .
+
+# --- RDF: 교과 및 인스턴스 정의 ---
+ex:TechnologyHomeEconomics a ex:Subject, ex:TechnologyHomeEconomicsSubject ;
+    rdfs:label "기술·가정"@ko ;
+    ex:description "가정생활에 대한 전인적 이해와 실천을 바탕으로 행복한 삶을 영위하고, 기술적 소양과 문제 해결 능력을 갖추어 미래 사회를 주도하는 실천 교과"@ko ;
+    ex:hasArea ex:HumanDevelopmentAndFamily, ex:DietaryClothingHousingLife, ex:FamilyLifeManagement,
+               ex:TechnologySystem, ex:TechnologyInnovation, ex:SustainableTechnology ;
+    ex:developsCompetency ex:PracticalProblemSolving, ex:LifeDesignAndManagement, ex:RelationshipFormation,
+                          ex:TechnologyProblemSolving, ex:TechnologySystemThinking, ex:TechnologyParticipationAndAdaptation ;
+    ex:hasContentElement ex:SelfReflectionAndGoalSetting, ex:DietaryClothingHousingPlanning, ex:ResourceManagementAndDecisionMaking,
+                          ex:TechnologicalDesignAndMaking, ex:SystemThinkingAndAnalysis, ex:SafetyPracticeAndEvaluation,
+                          ex:RespectForLifeAndFamily, ex:EcoFriendlyConsumptionAttitude, ex:CreativityAndPerseverance, ex:EthicalTechnologyAttitude .
+
+# --- 내용 영역 (가정 3영역 + 기술 3영역) ---
+# 1. 인간 발달과 가족
+ex:HumanDevelopmentAndFamily a ex:LearningArea ;
+    rdfs:label "인간 발달과 가족"@ko ;
+    ex:hasCoreIdea ex:AdolescentDevelopmentCoreIdea, ex:FamilyRelationshipCoreIdea ;
+    ex:hasContentElement ex:AdolescentDevelopmentAndSelfIdentity, ex:HealthyFamilyRelationships, ex:FamilyConflictAndCommunication ;
+    ex:relatedToArea ex:DietaryClothingHousingLife, ex:FamilyLifeManagement .
+
+# 2. 식·의·주생활
+ex:DietaryClothingHousingLife a ex:LearningArea ;
+    rdfs:label "식·의·주생활"@ko ;
+    ex:hasCoreIdea ex:HealthyDietaryHabitsCoreIdea, ex:SustainableClothingHousingCoreIdea ;
+    ex:hasContentElement ex:AdolescentNutritionAndDietaryManagement, ex:SafeMealPreparationAndCooking,
+                          ex:SustainableClothingManagementAndRecycling, ex:ResidentialSpaceDesignAndSafeHousing ;
+    ex:relatedToArea ex:HumanDevelopmentAndFamily, ex:FamilyLifeManagement .
+
+# 3. 가족생활과 관리
+ex:FamilyLifeManagement a ex:LearningArea ;
+    rdfs:label "가족생활과 관리"@ko ;
+    ex:hasCoreIdea ex:FamilyResourceManagementCoreIdea, ex:CareerAndLifeDesignCoreIdea ;
+    ex:hasContentElement ex:YouthConsumerLifeAndFinancialManagement, ex:TimeAndStressManagement, ex:CareerExplorationAndLifeDesign ;
+    ex:relatedToArea ex:HumanDevelopmentAndFamily, ex:DietaryClothingHousingLife .
+
+# 4. 기술 시스템 (제조·건설·수송·정보통신·생명기술 시스템)
+ex:TechnologySystem a ex:LearningArea ;
+    rdfs:label "기술 시스템"@ko ;
+    ex:hasCoreIdea ex:ManufacturingConstructionSystemCoreIdea, ex:TransportCommunicationBioSystemCoreIdea ;
+    ex:hasContentElement ex:ManufacturingTechnologyAndProduction, ex:ConstructionTechnologyAndSpaceStructure,
+                          ex:TransportTechnologyAndMobility, ex:InformationCommunicationTechnologyAndMedia, ex:BiotechnologyAndLivingResources ;
+    ex:relatedToArea ex:TechnologyInnovation, ex:SustainableTechnology .
+
+# 5. 기술 혁신 (발명, 신기술, 소프트웨어와 인공지능)
+ex:TechnologyInnovation a ex:LearningArea ;
+    rdfs:label "기술 혁신"@ko ;
+    ex:hasCoreIdea ex:InventionAndPatentCoreIdea, ex:DigitalConvergenceCoreIdea ;
+    ex:hasContentElement ex:TechnologicalInventionAndDesign, ex:IntellectualPropertyAndPatent,
+                          ex:SoftwareAndAlgorithmProblemSolving, ex:ArtificialIntelligenceAndRobotics ;
+    ex:relatedToArea ex:TechnologySystem, ex:SustainableTechnology .
+
+# 6. 지속가능한 기술 (적정기술, 친환경·신재생에너지, 기술과 윤리)
+ex:SustainableTechnology a ex:LearningArea ;
+    rdfs:label "지속가능한 기술"@ko ;
+    ex:hasCoreIdea ex:AppropriateTechnologyCoreIdea, ex:FutureEcoEnergyCoreIdea ;
+    ex:hasContentElement ex:AppropriateTechnologyAndGlobalIssues, ex:NewRenewableEnergyAndGreenTechnology, ex:TechnologicalEthicsAndFutureSociety ;
+    ex:relatedToArea ex:TechnologySystem, ex:TechnologyInnovation .
+
+# --- 핵심 아이디어 ---
+ex:AdolescentDevelopmentCoreIdea a ex:CoreIdea ;
+    ex:description "청소년기는 신체적·심리적·사회적 발달이 급격하게 일어나는 시기로, 자아정체감을 확립하고 독립적인 인격체로 성장한다."@ko .
+ex:FamilyRelationshipCoreIdea a ex:CoreIdea ;
+    ex:description "가족은 개인의 성장 기반이자 상호작용 공동체로서, 소통과 돌봄을 통해 건강한 관계를 형성한다."@ko .
+ex:HealthyDietaryHabitsCoreIdea a ex:CoreIdea ;
+    ex:description "균형 잡힌 영양 섭취와 안전하고 위생적인 식생활 실천은 청소년의 건강한 발달을 도모한다."@ko .
+ex:SustainableClothingHousingCoreIdea a ex:CoreIdea ;
+    ex:description "의복 및 주거 환경의 지속가능한 관리와 공간 디자인은 개인과 지구 환경의 안녕을 증진한다."@ko .
+ex:FamilyResourceManagementCoreIdea a ex:CoreIdea ;
+    ex:description "가정 자원의 합리적 관리와 윤리적 소비 생활은 현재와 미래의 삶의 질을 높인다."@ko .
+ex:CareerAndLifeDesignCoreIdea a ex:CoreIdea ;
+    ex:description "변화하는 직업 세계와 생애주기를 고려하여 진로를 탐색하고 미래 생애를 주도적으로 설계한다."@ko .
+ex:ManufacturingConstructionSystemCoreIdea a ex:CoreIdea ;
+    ex:description "재료를 가공하고 공간을 구조화하는 제조·건설 기술은 인간의 생활 편의와 공간 확장을 이끈다."@ko .
+ex:TransportCommunicationBioSystemCoreIdea a ex:CoreIdea ;
+    ex:description "수송, 정보통신, 생명기술 시스템은 인간과 사물의 이동, 정보 공유, 생명자원 활용을 효율화한다."@ko .
+ex:InventionAndPatentCoreIdea a ex:CoreIdea ;
+    ex:description "창의적 아이디어 발상과 표준화된 설계 과정을 통해 기술적 문제를 해결하고 지식재산권을 창출한다."@ko .
+ex:DigitalConvergenceCoreIdea a ex:CoreIdea ;
+    ex:description "소프트웨어, 인공지능, 로봇 등 첨단 융합 기술은 사회를 혁신하고 새로운 가치를 생성한다."@ko .
+ex:AppropriateTechnologyCoreIdea a ex:CoreIdea ;
+    ex:description "지역 사회의 환경과 문화에 부합하는 적정기술은 지구촌 문제를 인도주의적으로 해결하는 대안이다."@ko .
+ex:FutureEcoEnergyCoreIdea a ex:CoreIdea ;
+    ex:description "신·재생에너지와 친환경 기술의 발전은 탄소중립과 미래 사회의 지속가능성을 보장한다."@ko .
+
+# --- 내용 요소: 지식·이해 (중학교 1~3학년) ---
+ex:AdolescentDevelopmentAndSelfIdentity a ex:KnowledgeUnderstanding ; rdfs:label "청소년기 발달 특성과 자아정체감"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:HealthyFamilyRelationships a ex:KnowledgeUnderstanding ; rdfs:label "가족의 형태와 기능, 건강한 가족 관계"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:FamilyConflictAndCommunication a ex:KnowledgeUnderstanding ; rdfs:label "가족 갈등 해결과 공감적 의사소통"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:AdolescentNutritionAndDietaryManagement a ex:KnowledgeUnderstanding ; rdfs:label "청소년의 영양 요구와 균형 잡힌 식단 계획"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:SafeMealPreparationAndCooking a ex:KnowledgeUnderstanding ; rdfs:label "위생적인 조리 실습과 안전한 식생활"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:SustainableClothingManagementAndRecycling a ex:KnowledgeUnderstanding ; rdfs:label "친환경 의생활과 의복 재활용 및 리폼"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:ResidentialSpaceDesignAndSafeHousing a ex:KnowledgeUnderstanding ; rdfs:label "주거 공간 구성과 쾌적하고 안전한 주거 환경"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:YouthConsumerLifeAndFinancialManagement a ex:KnowledgeUnderstanding ; rdfs:label "합리적 소비 생활과 청소년 금융 자산 관리"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:TimeAndStressManagement a ex:KnowledgeUnderstanding ; rdfs:label "생활시간 관리와 스트레스 대처 전략"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:CareerExplorationAndLifeDesign a ex:KnowledgeUnderstanding ; rdfs:label "진로 탐색과 미래 생애주기별 생애 설계"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:ManufacturingTechnologyAndProduction a ex:KnowledgeUnderstanding ; rdfs:label "제조 기술 시스템과 생산 및 가공 기법"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:ConstructionTechnologyAndSpaceStructure a ex:KnowledgeUnderstanding ; rdfs:label "건설 기술 시스템과 구조물 시공 및 주거 계획"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:TransportTechnologyAndMobility a ex:KnowledgeUnderstanding ; rdfs:label "수송 기술의 발달과 미래 모빌리티 시스템"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:InformationCommunicationTechnologyAndMedia a ex:KnowledgeUnderstanding ; rdfs:label "정보통신 매체와 유무선 네트워크 시스템"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:BiotechnologyAndLivingResources a ex:KnowledgeUnderstanding ; rdfs:label "생명기술 원리와 생명자원의 산업적 활용"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:TechnologicalInventionAndDesign a ex:KnowledgeUnderstanding ; rdfs:label "발명 기법과 도면 작성, 창의적 제품 설계"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:IntellectualPropertyAndPatent a ex:KnowledgeUnderstanding ; rdfs:label "지식재산권의 이해와 특허 출원 과정"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:SoftwareAndAlgorithmProblemSolving a ex:KnowledgeUnderstanding ; rdfs:label "알고리즘 설계와 프로그래밍을 통한 자동화"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:ArtificialIntelligenceAndRobotics a ex:KnowledgeUnderstanding ; rdfs:label "인공지능 모델 활용과 로봇 제어 시스템"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:AppropriateTechnologyAndGlobalIssues a ex:KnowledgeUnderstanding ; rdfs:label "지구촌 소외 계층을 위한 적정기술 설계"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:NewRenewableEnergyAndGreenTechnology a ex:KnowledgeUnderstanding ; rdfs:label "신재생에너지 발전 원리와 친환경 기술 실천"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:TechnologicalEthicsAndFutureSociety a ex:KnowledgeUnderstanding ; rdfs:label "디지털·기술 윤리와 미래 기술 발전 전망"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+
+# --- 기술·가정과 교과 역량 (가정 3개 + 기술 3개) ---
+ex:PracticalProblemSolving a ex:Competency ; rdfs:label "실천적 문제해결능력"@ko .
+ex:LifeDesignAndManagement a ex:Competency ; rdfs:label "생활자립 및 설계능력"@ko .
+ex:RelationshipFormation a ex:Competency ; rdfs:label "관계형성 및 소통능력"@ko .
+ex:TechnologyProblemSolving a ex:Competency ; rdfs:label "기술적 문제해결능력"@ko .
+ex:TechnologySystemThinking a ex:Competency ; rdfs:label "기술시스템 설계능력"@ko .
+ex:TechnologyParticipationAndAdaptation a ex:Competency ; rdfs:label "기술활용 및 적응능력"@ko .
+
+# --- 내용 요소: 과정·기능 및 가치·태도 ---
+ex:SelfReflectionAndGoalSetting a ex:ProcessSkill ; rdfs:label "자아 성찰 및 생활 목표 설정하기"@ko .
+ex:DietaryClothingHousingPlanning a ex:ProcessSkill ; rdfs:label "식·의·주생활 문제 진단 및 실천 계획 수립"@ko .
+ex:ResourceManagementAndDecisionMaking a ex:ProcessSkill ; rdfs:label "자원 활용 의사결정 및 경제적 실행"@ko .
+ex:TechnologicalDesignAndMaking a ex:ProcessSkill ; rdfs:label "기술적 아이디어 구상, 도면화 및 시제품 제작"@ko .
+ex:SystemThinkingAndAnalysis a ex:ProcessSkill ; rdfs:label "기술 시스템 분석 및 작동 원리 평가"@ko .
+ex:SafetyPracticeAndEvaluation a ex:ProcessSkill ; rdfs:label "안전 수칙 준수 및 결과물 피드백"@ko .
+
+ex:RespectForLifeAndFamily a ex:ValueAttitude ; rdfs:label "생명 존중 및 가족 구성원에 대한 배려"@ko .
+ex:EcoFriendlyConsumptionAttitude a ex:ValueAttitude ; rdfs:label "친환경적 소비 및 생태 전환적 태도"@ko .
+ex:CreativityAndPerseverance a ex:ValueAttitude ; rdfs:label "창의적 도전 정신 및 과제 집착력"@ko .
+ex:EthicalTechnologyAttitude a ex:ValueAttitude ; rdfs:label "책임 있는 기술 활용 및 공학 윤리 의식"@ko .

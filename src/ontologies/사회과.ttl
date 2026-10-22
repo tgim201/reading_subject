@@ -1,0 +1,207 @@
+@prefix ex:   <https://example.org/curriculum/social-studies#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+
+# 중학교 사회과 교육과정의 RDF/RDFS/OWL 구조화 예시
+# RDF: 교과·영역·핵심 아이디어·내용 요소의 사실 관계를 triple로 표현
+# RDFS: 클래스와 속성의 의미, domain/range, 하위 클래스 정의
+# OWL: 클래스 간 배타성과 교과 영역 수에 대한 제약을 표현
+
+ex:MiddleSchoolSocialStudiesCurriculum a owl:Ontology ;
+    dc:title "2022 개정 중학교 사회과 교육과정 구조화 예시"@ko ;
+    dc:description "교육과정 원문에 제시된 사회과 영역, 핵심 아이디어, 내용 범주 및 역량을 RDF/RDFS/OWL로 표현한 학습용 예시"@ko .
+
+# --- RDFS: 클래스 정의 ---
+ex:Curriculum a owl:Class ; rdfs:label "교육과정"@ko .
+ex:Subject a owl:Class ; rdfs:subClassOf ex:Curriculum ; rdfs:label "교과"@ko .
+ex:LearningArea a owl:Class ; rdfs:label "내용 영역"@ko .
+ex:CoreIdea a owl:Class ; rdfs:label "핵심 아이디어"@ko .
+ex:ContentElement a owl:Class ; rdfs:label "내용 요소"@ko .
+ex:Competency a owl:Class ; rdfs:label "역량"@ko .
+ex:ProcessSkill a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "과정·기능"@ko .
+ex:ValueAttitude a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "가치·태도"@ko .
+ex:KnowledgeUnderstanding a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "지식·이해"@ko .
+
+ex:hasArea a owl:ObjectProperty ;
+    rdfs:domain ex:Subject ; rdfs:range ex:LearningArea ; rdfs:label "포함 영역"@ko .
+ex:hasCoreIdea a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:CoreIdea ; rdfs:label "핵심 아이디어"@ko .
+ex:hasContentElement a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:ContentElement ; rdfs:label "내용 요소"@ko .
+ex:developsCompetency a owl:ObjectProperty ;
+    rdfs:domain ex:Subject ; rdfs:range ex:Competency ; rdfs:label "함양 역량"@ko .
+ex:relatedToArea a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:LearningArea ; rdfs:label "관련 영역"@ko .
+ex:gradeBand a owl:DatatypeProperty ;
+    rdfs:domain ex:ContentElement ; rdfs:range xsd:string ; rdfs:label "학년군"@ko .
+ex:description a owl:DatatypeProperty ;
+    rdfs:range xsd:string ; rdfs:label "설명"@ko .
+
+# --- OWL: 의미 제약 및 관계 ---
+ex:LearningArea owl:disjointWith ex:CoreIdea, ex:ContentElement, ex:Competency .
+ex:CoreIdea owl:disjointWith ex:ContentElement, ex:Competency .
+ex:KnowledgeUnderstanding owl:disjointWith ex:ProcessSkill, ex:ValueAttitude .
+ex:ProcessSkill owl:disjointWith ex:ValueAttitude .
+ex:SocialStudiesSubject a owl:Class ;
+    rdfs:subClassOf ex:Subject ,
+      [ a owl:Restriction ; owl:onProperty ex:hasArea ;
+        owl:qualifiedCardinality "11"^^xsd:nonNegativeInteger ;
+        owl:onClass ex:LearningArea ] .
+
+# --- RDF: 교과 및 영역 인스턴스 ---
+ex:SocialStudies a ex:Subject, ex:SocialStudiesSubject ;
+    rdfs:label "사회"@ko ;
+    ex:description "사회현상을 이해하고 다양한 정보를 활용해 현대 사회의 문제를 창의적·합리적으로 해결하며 책임 있는 시민을 기르는 교과"@ko ;
+    ex:hasArea ex:GeographicAwareness, ex:NaturalEnvironmentHumanLife, ex:HumanEnvironmentHumanLife,
+        ex:SustainableWorld, ex:Politics, ex:Law, ex:Economics, ex:SocietyCulture,
+        ex:GeneralHistory, ex:RegionalHistory, ex:KoreanHistory ;
+    ex:developsCompetency ex:CreativeThinking, ex:CriticalThinking, ex:ProblemSolvingDecisionMaking,
+        ex:CommunicationCollaboration, ex:InformationLiteracy .
+
+ex:GeographicAwareness a ex:LearningArea ;
+    rdfs:label "지리 인식"@ko ;
+    ex:hasCoreIdea ex:LocationPlaceRegionCoreIdea, ex:SpatialDataCoreIdea ;
+    ex:hasContentElement ex:LocationTerritory, ex:PlaceRegion, ex:SpatialAnalysis, ex:DigitalMaps ;
+    ex:relatedToArea ex:NaturalEnvironmentHumanLife, ex:SustainableWorld .
+ex:NaturalEnvironmentHumanLife a ex:LearningArea ;
+    rdfs:label "자연환경과 인간생활"@ko ;
+    ex:hasCoreIdea ex:ClimateHumanLifeCoreIdea, ex:LandformHumanLifeCoreIdea, ex:HumanNatureInteractionCoreIdea ;
+    ex:hasContentElement ex:ClimateEnvironment, ex:LandformEnvironment, ex:ClimateChange, ex:NaturalDisaster ;
+    ex:relatedToArea ex:GeographicAwareness, ex:SustainableWorld .
+ex:HumanEnvironmentHumanLife a ex:LearningArea ;
+    rdfs:label "인문환경과 인간생활"@ko ;
+    ex:hasCoreIdea ex:PopulationCultureCoreIdea, ex:CityVillageCoreIdea, ex:EconomicTransportCoreIdea ;
+    ex:hasContentElement ex:Population, ex:CulturalDiversity, ex:UrbanIssues, ex:TransportCommunication ;
+    ex:relatedToArea ex:GeographicAwareness, ex:SustainableWorld .
+ex:SustainableWorld a ex:LearningArea ;
+    rdfs:label "지속가능한 세계"@ko ;
+    ex:hasCoreIdea ex:ConflictInequalityCoreIdea, ex:SustainableEnvironmentCoreIdea, ex:GlobalCooperationCoreIdea ;
+    ex:hasContentElement ex:GlobalConflict, ex:RegionalInequality, ex:SustainableCity, ex:ClimateSustainability, ex:PeaceAndUnification ;
+    ex:relatedToArea ex:NaturalEnvironmentHumanLife, ex:HumanEnvironmentHumanLife .
+ex:Politics a ex:LearningArea ;
+    rdfs:label "정치"@ko ;
+    ex:hasCoreIdea ex:DemocracyInstitutionsCoreIdea, ex:PoliticalParticipationCoreIdea, ex:InternationalActorsCoreIdea ;
+    ex:hasContentElement ex:Democracy, ex:Elections, ex:MediaAnalysis, ex:LocalAutonomy, ex:InternationalConflict ;
+    ex:relatedToArea ex:Law .
+ex:Law a ex:LearningArea ;
+    rdfs:label "법"@ko ;
+    ex:hasCoreIdea ex:LawRightsCoreIdea, ex:HumanRightsCoreIdea, ex:ConstitutionInstitutionsCoreIdea ;
+    ex:hasContentElement ex:LegalSystem, ex:HumanRights, ex:BasicRights, ex:SeparationOfPowers, ex:FairTrial ;
+    ex:relatedToArea ex:Politics .
+ex:Economics a ex:LearningArea ;
+    rdfs:label "경제"@ko ;
+    ex:hasCoreIdea ex:ChoiceMarketCoreIdea, ex:SupplyDemandCoreIdea, ex:NationalEconomyCoreIdea ;
+    ex:hasContentElement ex:RationalChoice, ex:HouseholdBusiness, ex:SupplyDemand, ex:MarketPrice, ex:InflationUnemployment, ex:InternationalTradeExchange ;
+    ex:relatedToArea ex:SocietyCulture .
+ex:SocietyCulture a ex:LearningArea ;
+    rdfs:label "사회·문화"@ko ;
+    ex:hasCoreIdea ex:SocialRelationsCultureCoreIdea ;
+    ex:hasContentElement ex:CultureDiversity, ex:SocialRelations, ex:SocialProblems ;
+    ex:relatedToArea ex:Politics, ex:Economics .
+ex:GeneralHistory a ex:LearningArea ;
+    rdfs:label "역사 일반"@ko ;
+    ex:hasCoreIdea ex:HistoricalInterpretationCoreIdea ;
+    ex:hasContentElement ex:HistoricalSources, ex:HistoricalContext, ex:PastPresentConnection ;
+    ex:relatedToArea ex:RegionalHistory, ex:KoreanHistory .
+ex:RegionalHistory a ex:LearningArea ;
+    rdfs:label "지역사"@ko ;
+    ex:hasCoreIdea ex:RegionalPastCoreIdea ;
+    ex:hasContentElement ex:LocalHistory, ex:HistoricalRecords ;
+    ex:relatedToArea ex:GeneralHistory, ex:KoreanHistory .
+ex:KoreanHistory a ex:LearningArea ;
+    rdfs:label "한국사"@ko ;
+    ex:hasCoreIdea ex:KoreanHistoricalChangeCoreIdea ;
+    ex:hasContentElement ex:KoreanHistoricalEvents, ex:HistoricalChange ;
+    ex:relatedToArea ex:GeneralHistory, ex:RegionalHistory .
+
+# 핵심 아이디어(원문의 핵심 진술을 요약한 개별 자원)
+ex:LocationPlaceRegionCoreIdea a ex:CoreIdea ; ex:description "장소와 지역은 위치, 자연·인문적 특성, 상호작용에 따라 고유한 성격을 가진다."@ko .
+ex:SpatialDataCoreIdea a ex:CoreIdea ; ex:description "지도 등 공간자료와 도구를 통한 지리 정보 수집은 현상 분석과 해석에 필수적이다."@ko .
+ex:ClimateHumanLifeCoreIdea a ex:CoreIdea ; ex:description "기후 환경은 특정 지역의 생활양식에 중요하게 작용한다."@ko .
+ex:LandformHumanLifeCoreIdea a ex:CoreIdea ; ex:description "지형 경관은 지역의 인문환경과 인간생활에 영향을 미친다."@ko .
+ex:HumanNatureInteractionCoreIdea a ex:CoreIdea ; ex:description "인간은 자연환경에 의존하고 적응하며 자연환경을 변형하기도 한다."@ko .
+ex:PopulationCultureCoreIdea a ex:CoreIdea ; ex:description "지역의 자연·인문적 특성은 인구 분포와 이동에 영향을 주며 문화는 형성되고 변화한다."@ko .
+ex:CityVillageCoreIdea a ex:CoreIdea ; ex:description "도시와 촌락은 입지, 기능, 공간 구조와 경관에 따라 다양한 유형으로 나타나고 변화한다."@ko .
+ex:EconomicTransportCoreIdea a ex:CoreIdea ; ex:description "경제활동은 지역 특성에 따라 다르게 나타나며 교통·통신은 지역을 변화시킨다."@ko .
+ex:ConflictInequalityCoreIdea a ex:CoreIdea ; ex:description "거주 조건의 공간적 불균등은 지역 간 갈등이나 분쟁으로 이어질 수 있다."@ko .
+ex:SustainableEnvironmentCoreIdea a ex:CoreIdea ; ex:description "인간의 신념과 활동은 지구환경의 지속가능성에 영향을 미친다."@ko .
+ex:GlobalCooperationCoreIdea a ex:CoreIdea ; ex:description "공동의 번영과 공존을 위해 지역에서 지구적 수준까지 협력과 연대가 필요하다."@ko .
+ex:DemocracyInstitutionsCoreIdea a ex:CoreIdea ; ex:description "민주주의의 이념과 원리를 실현하려면 제도와 의식의 개선이 필요하다."@ko .
+ex:PoliticalParticipationCoreIdea a ex:CoreIdea ; ex:description "정치 주체는 정치과정에 참여하며 민주주의는 제도와 시민 참여로 실현된다."@ko .
+ex:InternationalActorsCoreIdea a ex:CoreIdea ; ex:description "국제 사회의 여러 행위 주체는 국제 문제 해결을 위해 노력한다."@ko .
+ex:LawRightsCoreIdea a ex:CoreIdea ; ex:description "법은 일상생활을 규율하며 재판을 통해 권리를 실현할 수 있다."@ko .
+ex:HumanRightsCoreIdea a ex:CoreIdea ; ex:description "헌법상 기본권을 바탕으로 국가와 시민은 인권 보장을 위해 노력한다."@ko .
+ex:ConstitutionInstitutionsCoreIdea a ex:CoreIdea ; ex:description "헌법에 따라 국가기관이 구성되고 권한을 행사한다."@ko .
+ex:ChoiceMarketCoreIdea a ex:CoreIdea ; ex:description "가계와 기업은 합리적 선택을 통해 소비·금융·생산 활동을 수행한다."@ko .
+ex:SupplyDemandCoreIdea a ex:CoreIdea ; ex:description "시장의 가격은 수요와 공급을 통해 결정되고 여러 요인으로 변동한다."@ko .
+ex:NationalEconomyCoreIdea a ex:CoreIdea ; ex:description "경제 성장, 물가 변동, 실업 및 국제 교역은 국가 경제의 주요 현상이다."@ko .
+ex:SocialRelationsCultureCoreIdea a ex:CoreIdea ; ex:description "사회·문화 현상을 이해하고 사회문제 해결에 참여하는 시민의 자질을 기른다."@ko .
+ex:HistoricalInterpretationCoreIdea a ex:CoreIdea ; ex:description "역사의 의미와 시대별 생활 모습을 다양한 시각에서 해석하고 성찰한다."@ko .
+ex:RegionalPastCoreIdea a ex:CoreIdea ; ex:description "지역의 역사 자료를 통해 지역의 과거와 변화 양상을 탐구한다."@ko .
+ex:KoreanHistoricalChangeCoreIdea a ex:CoreIdea ; ex:description "한국사의 사건과 변화 과정을 맥락 속에서 이해한다."@ko .
+
+# 내용 요소(대표 예시)
+ex:LocationTerritory a ex:KnowledgeUnderstanding ; rdfs:label "위치와 영역"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:PlaceRegion a ex:KnowledgeUnderstanding ; rdfs:label "장소와 지역"@ko .
+ex:SpatialAnalysis a ex:KnowledgeUnderstanding ; rdfs:label "공간 분석"@ko .
+ex:DigitalMaps a ex:KnowledgeUnderstanding ; rdfs:label "디지털 지도와 공간자료"@ko .
+ex:ClimateEnvironment a ex:KnowledgeUnderstanding ; rdfs:label "기후 환경"@ko .
+ex:LandformEnvironment a ex:KnowledgeUnderstanding ; rdfs:label "지형 환경"@ko .
+ex:ClimateChange a ex:KnowledgeUnderstanding ; rdfs:label "기후변화"@ko .
+ex:NaturalDisaster a ex:KnowledgeUnderstanding ; rdfs:label "자연재해"@ko .
+ex:Population a ex:KnowledgeUnderstanding ; rdfs:label "인구"@ko .
+ex:CulturalDiversity a ex:KnowledgeUnderstanding ; rdfs:label "문화 다양성"@ko .
+ex:UrbanIssues a ex:KnowledgeUnderstanding ; rdfs:label "도시문제"@ko .
+ex:TransportCommunication a ex:KnowledgeUnderstanding ; rdfs:label "교통과 통신"@ko .
+ex:GlobalConflict a ex:KnowledgeUnderstanding ; rdfs:label "지구촌 갈등"@ko .
+ex:RegionalInequality a ex:KnowledgeUnderstanding ; rdfs:label "지역 불균형"@ko .
+ex:SustainableCity a ex:KnowledgeUnderstanding ; rdfs:label "지속가능한 도시"@ko .
+ex:ClimateSustainability a ex:KnowledgeUnderstanding ; rdfs:label "기후변화와 지속가능성"@ko .
+ex:PeaceAndUnification a ex:KnowledgeUnderstanding ; rdfs:label "한반도 평화와 통일"@ko .
+ex:Democracy a ex:KnowledgeUnderstanding ; rdfs:label "민주주의"@ko .
+ex:Elections a ex:KnowledgeUnderstanding ; rdfs:label "선거와 유권자"@ko .
+ex:MediaAnalysis a ex:ProcessSkill ; rdfs:label "미디어 콘텐츠 비판적 분석"@ko .
+ex:LocalAutonomy a ex:KnowledgeUnderstanding ; rdfs:label "지방 자치와 시민 참여"@ko .
+ex:InternationalConflict a ex:KnowledgeUnderstanding ; rdfs:label "국제 사회의 분쟁"@ko .
+ex:LegalSystem a ex:KnowledgeUnderstanding ; rdfs:label "법의 의미와 역할"@ko .
+ex:HumanRights a ex:KnowledgeUnderstanding ; rdfs:label "인권"@ko .
+ex:BasicRights a ex:KnowledgeUnderstanding ; rdfs:label "기본권"@ko .
+ex:SeparationOfPowers a ex:KnowledgeUnderstanding ; rdfs:label "권력 분립"@ko .
+ex:FairTrial a ex:KnowledgeUnderstanding ; rdfs:label "공정한 재판"@ko .
+ex:RationalChoice a ex:KnowledgeUnderstanding ; rdfs:label "합리적 선택"@ko .
+ex:HouseholdBusiness a ex:KnowledgeUnderstanding ; rdfs:label "가계와 기업의 역할"@ko .
+ex:SupplyDemand a ex:KnowledgeUnderstanding ; rdfs:label "수요와 공급"@ko .
+ex:MarketPrice a ex:KnowledgeUnderstanding ; rdfs:label "시장 가격의 결정과 변동"@ko .
+ex:InflationUnemployment a ex:KnowledgeUnderstanding ; rdfs:label "물가 변동과 실업"@ko .
+ex:InternationalTradeExchange a ex:KnowledgeUnderstanding ; rdfs:label "국제 거래와 환율"@ko .
+ex:CultureDiversity a ex:KnowledgeUnderstanding ; rdfs:label "문화 다양성과 문화 혼종성"@ko .
+ex:SocialRelations a ex:KnowledgeUnderstanding ; rdfs:label "사회적 관계"@ko .
+ex:SocialProblems a ex:KnowledgeUnderstanding ; rdfs:label "사회문제"@ko .
+ex:HistoricalSources a ex:KnowledgeUnderstanding ; rdfs:label "역사 자료"@ko .
+ex:HistoricalContext a ex:KnowledgeUnderstanding ; rdfs:label "역사적 맥락"@ko .
+ex:PastPresentConnection a ex:KnowledgeUnderstanding ; rdfs:label "과거와 현재의 연계"@ko .
+ex:LocalHistory a ex:KnowledgeUnderstanding ; rdfs:label "지역사"@ko .
+ex:HistoricalRecords a ex:KnowledgeUnderstanding ; rdfs:label "역사 기록"@ko .
+ex:KoreanHistoricalEvents a ex:KnowledgeUnderstanding ; rdfs:label "한국사의 주요 사건"@ko .
+ex:HistoricalChange a ex:KnowledgeUnderstanding ; rdfs:label "역사적 변화"@ko .
+
+# 역량, 탐구 기능, 가치·태도
+ex:CreativeThinking a ex:Competency ; rdfs:label "창의적 사고력"@ko .
+ex:CriticalThinking a ex:Competency ; rdfs:label "비판적 사고력"@ko .
+ex:ProblemSolvingDecisionMaking a ex:Competency ; rdfs:label "문제 해결력 및 의사 결정력"@ko .
+ex:CommunicationCollaboration a ex:Competency ; rdfs:label "의사소통 및 협업 능력"@ko .
+ex:InformationLiteracy a ex:Competency ; rdfs:label "정보 활용 능력"@ko .
+ex:CollectInterpretUseInformation a ex:ProcessSkill ; rdfs:label "자료 및 정보 수집·해석·활용"@ko .
+ex:InvestigateSocialIssues a ex:ProcessSkill ; rdfs:label "사회문제와 쟁점 탐구"@ko .
+ex:EvaluatePerspectives a ex:ProcessSkill ; rdfs:label "다양한 관점 검토 및 의사소통"@ko .
+ex:ParticipateInCommunity a ex:ProcessSkill ; rdfs:label "사회 참여"@ko .
+ex:RespectDiversity a ex:ValueAttitude ; rdfs:label "다양한 가치·관점·의견 존중"@ko .
+ex:DemocraticValues a ex:ValueAttitude ; rdfs:label "민주적 기본 가치"@ko .
+ex:SustainabilityPractice a ex:ValueAttitude ; rdfs:label "지속가능한 발전을 위한 참여와 실천"@ko .
+
+ex:SocialStudies ex:hasContentElement ex:CollectInterpretUseInformation, ex:InvestigateSocialIssues,
+    ex:EvaluatePerspectives, ex:ParticipateInCommunity, ex:RespectDiversity,
+    ex:DemocraticValues, ex:SustainabilityPractice .

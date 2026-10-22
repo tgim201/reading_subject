@@ -1,0 +1,142 @@
+@prefix ex:   <https://example.org/curriculum/korean#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+
+# 2022 개정 중학교 국어과 교육과정의 RDF/RDFS/OWL 구조화
+ex:MiddleSchoolKoreanCurriculum a owl:Ontology ;
+    dc:title "2022 개정 중학교 국어과 교육과정 구조화"@ko ;
+    dc:description "2022 개정 국어과 교육과정에 제시된 영역, 핵심 아이디어, 내용 요소 및 교과 역량을 RDF/RDFS/OWL로 표현한 온톨로지"@ko .
+
+# --- RDFS: 클래스 정의 ---
+ex:Curriculum a owl:Class ; rdfs:label "교육과정"@ko .
+ex:Subject a owl:Class ; rdfs:subClassOf ex:Curriculum ; rdfs:label "교과"@ko .
+ex:LearningArea a owl:Class ; rdfs:label "내용 영역"@ko .
+ex:CoreIdea a owl:Class ; rdfs:label "핵심 아이디어"@ko .
+ex:ContentElement a owl:Class ; rdfs:label "내용 요소"@ko .
+ex:Competency a owl:Class ; rdfs:label "역량"@ko .
+ex:ProcessSkill a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "과정·기능"@ko .
+ex:ValueAttitude a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "가치·태도"@ko .
+ex:KnowledgeUnderstanding a owl:Class ; rdfs:subClassOf ex:ContentElement ; rdfs:label "지식·이해"@ko .
+
+ex:hasArea a owl:ObjectProperty ;
+    rdfs:domain ex:Subject ; rdfs:range ex:LearningArea ; rdfs:label "포함 영역"@ko .
+ex:hasCoreIdea a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:CoreIdea ; rdfs:label "핵심 아이디어"@ko .
+ex:hasContentElement a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:ContentElement ; rdfs:label "내용 요소"@ko .
+ex:developsCompetency a owl:ObjectProperty ;
+    rdfs:domain ex:Subject ; rdfs:range ex:Competency ; rdfs:label "함양 역량"@ko .
+ex:relatedToArea a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:LearningArea ; rdfs:label "관련 영역"@ko .
+ex:gradeBand a owl:DatatypeProperty ;
+    rdfs:domain ex:ContentElement ; rdfs:range xsd:string ; rdfs:label "학년군"@ko .
+ex:description a owl:DatatypeProperty ;
+    rdfs:range xsd:string ; rdfs:label "설명"@ko .
+
+# --- RDF: 교과 및 영역 인스턴스 ---
+ex:KoreanLanguage a ex:Subject ;
+    rdfs:label "국어"@ko ;
+    ex:description "다양한 유형의 담화, 글, 작품, 매체 자료를 비판적·창의적으로 수용하고 생산하며 공동체의 의사소통 문화 발전에 기여하는 교과"@ko ;
+    ex:hasArea ex:ListeningSpeaking, ex:ReadingArea, ex:WritingArea, ex:GrammarLanguage, ex:Literature, ex:MediaArea ;
+    ex:developsCompetency ex:CriticalCreativeThinking, ex:DigitalMediaCompetency, ex:InterpersonalCommunication, ex:CommunityInterpersonal, ex:CulturalEnjoyment, ex:SelfReflectionDevelopment ;
+    ex:hasContentElement ex:AnalyzeTextStructure, ex:InferAndCritiqueMeaning, ex:SummarizeAndSynthesize,
+        ex:EvaluateReliabilityValidity, ex:ConnectReadingToLife, ex:ActiveReadingAttitude, ex:EthicalCommunicationAttitude .
+
+# 1. 듣기·말하기
+ex:ListeningSpeaking a ex:LearningArea ;
+    rdfs:label "듣기·말하기"@ko ;
+    ex:hasCoreIdea ex:EmpatheticCommunicationCoreIdea, ex:PersuasiveDiscussionCoreIdea ;
+    ex:hasContentElement ex:EmpatheticConversation, ex:DebateAndArgument, ex:PresentationAndVisuals .
+
+# 2. 읽기
+ex:ReadingArea a ex:LearningArea ;
+    rdfs:label "읽기"@ko ;
+    ex:hasCoreIdea ex:ProblemSolvingReadingCoreIdea, ex:CriticalIntertextualReadingCoreIdea ;
+    ex:hasContentElement ex:ExplainStructureAndSummary, ex:ArgumentativeCritique, ex:InferHiddenMeaning, ex:SynthesizeMultipleTexts .
+
+# 3. 쓰기
+ex:WritingArea a ex:LearningArea ;
+    rdfs:label "쓰기"@ko ;
+    ex:hasCoreIdea ex:ProcessBasedWritingCoreIdea, ex:ReaderOrientedWritingCoreIdea ;
+    ex:hasContentElement ex:InformativeExpositoryWriting, ex:PersuasiveArgumentWriting, ex:WritingEthicsAndCitation .
+
+# 4. 문법
+ex:GrammarLanguage a ex:LearningArea ;
+    rdfs:label "문법"@ko ;
+    ex:hasCoreIdea ex:LanguageStructurePrincipleCoreIdea ;
+    ex:hasContentElement ex:PhonologicalSystem, ex:PartsOfSpeechAndWords, ex:SentenceStructureAndExpression .
+
+# 5. 문학
+ex:Literature a ex:LearningArea ;
+    rdfs:label "문학"@ko ;
+    ex:hasCoreIdea ex:LiteraryInterpretationCoreIdea, ex:LiteraryEmpathyReflectionCoreIdea ;
+    ex:hasContentElement ex:NarrativePointOfView, ex:PoeticImageryAndSymbol, ex:SocialHistoricalContextLiterature .
+
+# 6. 매체
+ex:MediaArea a ex:LearningArea ;
+    rdfs:label "매체"@ko ;
+    ex:hasCoreIdea ex:MediaCriticalInquiryCoreIdea ;
+    ex:hasContentElement ex:MultimodalMediaAnalysis, ex:NewsAndAdvertisingFactCheck, ex:DigitalContentCreation .
+
+# --- 핵심 아이디어 ---
+ex:EmpatheticCommunicationCoreIdea a ex:CoreIdea ;
+    ex:description "상대방의 관점을 이해하고 공감하며 대화하는 것은 원만한 인간관계와 협력적 의사소통의 기반이다."@ko .
+ex:PersuasiveDiscussionCoreIdea a ex:CoreIdea ;
+    ex:description "타당한 근거를 들어 토론하고 토의하는 과정을 통해 공동체의 문제를 합리적으로 해결한다."@ko .
+ex:ProblemSolvingReadingCoreIdea a ex:CoreIdea ;
+    ex:description "읽기는 배경지식과 읽기 맥락을 활용하여 글의 정보를 재구성하고 의미를 구성하는 문제 해결 과정이다."@ko .
+ex:CriticalIntertextualReadingCoreIdea a ex:CoreIdea ;
+    ex:description "동일한 화제를 다룬 여러 글을 비교·대조하고 내용의 타당성과 신뢰성을 판단하며 비판적으로 읽는다."@ko .
+ex:ProcessBasedWritingCoreIdea a ex:CoreIdea ;
+    ex:description "쓰기는 목적과 예상 독자를 고려하여 내용을 생성·조직·표현하고 고쳐 쓰는 역동적 의미 구성 과정이다."@ko .
+ex:ReaderOrientedWritingCoreIdea a ex:CoreIdea ;
+    ex:description "다양한 자료를 종합하고 출처를 밝혀 윤리적이고 설득력 있는 글을 작성한다."@ko .
+ex:LanguageStructurePrincipleCoreIdea a ex:CoreIdea ;
+    ex:description "국어의 음운, 단어, 문장, 담화의 체계와 원리를 탐구하여 정확하고 효과적인 국어생활을 영위한다."@ko .
+ex:LiteraryInterpretationCoreIdea a ex:CoreIdea ;
+    ex:description "문학 작품은 내용과 형식의 유기적 결합체로서 독자의 주체적 해석과 비평을 통해 의미가 확장된다."@ko .
+ex:LiteraryEmpathyReflectionCoreIdea a ex:CoreIdea ;
+    ex:description "작품 속 인물의 삶과 갈등을 사회·문화적 맥락에서 이해하며 자아와 세계를 성찰한다."@ko .
+ex:MediaCriticalInquiryCoreIdea a ex:CoreIdea ;
+    ex:description "복합양식 매체 자료의 생산 의도와 표현 방식을 비판적으로 분석하고 창의적으로 매체를 생산한다."@ko .
+
+# --- 내용 요소: 지식·이해 ---
+ex:EmpatheticConversation a ex:KnowledgeUnderstanding ; rdfs:label "공감적 듣기와 대화의 원리"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:DebateAndArgument a ex:KnowledgeUnderstanding ; rdfs:label "토론의 논제와 논증 구조"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:PresentationAndVisuals a ex:KnowledgeUnderstanding ; rdfs:label "발표 내용의 구조화와 매체 자료 활용"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:ExplainStructureAndSummary a ex:KnowledgeUnderstanding ; rdfs:label "설명하는 글의 전개 방식과 요약하기"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:ArgumentativeCritique a ex:KnowledgeUnderstanding ; rdfs:label "주장하는 글의 논증 타당성과 공정성 평가"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:InferHiddenMeaning a ex:KnowledgeUnderstanding ; rdfs:label "생략된 내용 및 필자의 의도·관점 추론"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:SynthesizeMultipleTexts a ex:KnowledgeUnderstanding ; rdfs:label "복수 텍스트의 관점 비교 및 상호텍스트적 통합 읽기"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:InformativeExpositoryWriting a ex:KnowledgeUnderstanding ; rdfs:label "다양한 설명 방법을 활용한 정보 전달 글쓰기"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:PersuasiveArgumentWriting a ex:KnowledgeUnderstanding ; rdfs:label "타당한 근거와 반박을 포함한 설득하는 글쓰기"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:WritingEthicsAndCitation a ex:KnowledgeUnderstanding ; rdfs:label "쓰기 윤리와 올바른 자료 인용·출처 표기"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:PhonologicalSystem a ex:KnowledgeUnderstanding ; rdfs:label "음운의 체계와 음운 변동의 원리"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:PartsOfSpeechAndWords a ex:KnowledgeUnderstanding ; rdfs:label "품사의 분류 기준과 단어의 짜임"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:SentenceStructureAndExpression a ex:KnowledgeUnderstanding ; rdfs:label "문장의 성분과 짜임, 담화 표현 효과"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:NarrativePointOfView a ex:KnowledgeUnderstanding ; rdfs:label "서사 갈래의 시점과 인물·사건·배경 분석"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:PoeticImageryAndSymbol a ex:KnowledgeUnderstanding ; rdfs:label "운율, 심상, 비유와 상징의 표현 효과"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:SocialHistoricalContextLiterature a ex:KnowledgeUnderstanding ; rdfs:label "사회·문화·역사적 상황을 고려한 작품 감상"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:MultimodalMediaAnalysis a ex:KnowledgeUnderstanding ; rdfs:label "복합양식 매체 텍스트의 정보 구성과 유통 방식"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:NewsAndAdvertisingFactCheck a ex:KnowledgeUnderstanding ; rdfs:label "뉴스와 광고의 신뢰성·편향성 비판적 검증"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:DigitalContentCreation a ex:KnowledgeUnderstanding ; rdfs:label "디지털 매체 자료의 제작과 공유"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+
+# --- 역량, 과정·기능, 가치·태도 ---
+ex:CriticalCreativeThinking a ex:Competency ; rdfs:label "비판적·창의적 사고 역량"@ko .
+ex:DigitalMediaCompetency a ex:Competency ; rdfs:label "디지털·미디어 역량"@ko .
+ex:InterpersonalCommunication a ex:Competency ; rdfs:label "의사소통 역량"@ko .
+ex:CommunityInterpersonal a ex:Competency ; rdfs:label "공동체·대인관계 역량"@ko .
+ex:CulturalEnjoyment a ex:Competency ; rdfs:label "문화 향유 역량"@ko .
+ex:SelfReflectionDevelopment a ex:Competency ; rdfs:label "자기성찰·계발 역량"@ko .
+
+ex:AnalyzeTextStructure a ex:ProcessSkill ; rdfs:label "글의 구조와 전개 방식을 분석하고 파악하기"@ko .
+ex:InferAndCritiqueMeaning a ex:ProcessSkill ; rdfs:label "문맥을 통해 숨겨진 의미를 추론하고 비판적으로 해석하기"@ko .
+ex:SummarizeAndSynthesize a ex:ProcessSkill ; rdfs:label "핵심 정보를 요약하고 여러 자료를 통합·재구성하기"@ko .
+ex:EvaluateReliabilityValidity a ex:ProcessSkill ; rdfs:label "주장과 근거의 타당성 및 자료의 신뢰성 검증·판단하기"@ko .
+ex:ConnectReadingToLife a ex:ProcessSkill ; rdfs:label "독서 경험을 삶과 사회 문제에 연결하고 표현하기"@ko .
+
+ex:ActiveReadingAttitude a ex:ValueAttitude ; rdfs:label "능동적이고 주체적인 독서 태도"@ko .
+ex:EthicalCommunicationAttitude a ex:ValueAttitude ; rdfs:label "언어 및 매체 소통 윤리 준수"@ko .

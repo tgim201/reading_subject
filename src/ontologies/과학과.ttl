@@ -1,0 +1,197 @@
+@prefix ex:   <https://example.org/curriculum/science#> .
+@prefix rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix owl:  <http://www.w3.org/2002/07/owl#> .
+@prefix xsd:  <http://www.w3.org/2001/XMLSchema#> .
+@prefix dc:   <http://purl.org/dc/elements/1.1/> .
+
+# 중학교 과학과 교육과정의 RDF/RDFS/OWL 구조화 예시
+# RDF: 아래 개별 자원 간의 사실(triple)을 기술
+# RDFS: 클래스, 하위 클래스, 속성의 범위·자료형을 정의
+# OWL: 클래스 간 배타성 및 교육과정 구조의 의미를 더 정밀하게 정의
+
+ex:MiddleSchoolScienceCurriculum a owl:Ontology ;
+    dc:title "2022 개정 중학교 과학과 교육과정 구조화 예시"@ko ;
+    dc:description "교육과정 원문에 제시된 영역, 핵심 아이디어, 내용 범주 및 역량을 RDF/RDFS/OWL로 표현한 학습용 예시"@ko .
+
+# --- RDFS: 클래스 정의 ---
+ex:Curriculum a owl:Class ;
+    rdfs:label "교육과정"@ko .
+ex:Subject a owl:Class ;
+    rdfs:subClassOf ex:Curriculum ;
+    rdfs:label "교과"@ko .
+ex:LearningArea a owl:Class ;
+    rdfs:label "내용 영역"@ko .
+ex:CoreIdea a owl:Class ;
+    rdfs:label "핵심 아이디어"@ko .
+ex:ContentElement a owl:Class ;
+    rdfs:label "내용 요소"@ko .
+ex:Competency a owl:Class ;
+    rdfs:label "역량"@ko .
+ex:ProcessSkill a owl:Class ;
+    rdfs:subClassOf ex:ContentElement ;
+    rdfs:label "과정·기능"@ko .
+ex:ValueAttitude a owl:Class ;
+    rdfs:subClassOf ex:ContentElement ;
+    rdfs:label "가치·태도"@ko .
+ex:KnowledgeUnderstanding a owl:Class ;
+    rdfs:subClassOf ex:ContentElement ;
+    rdfs:label "지식·이해"@ko .
+
+ex:hasArea a owl:ObjectProperty ;
+    rdfs:domain ex:Subject ; rdfs:range ex:LearningArea ;
+    rdfs:label "포함 영역"@ko .
+ex:hasCoreIdea a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:CoreIdea ;
+    rdfs:label "핵심 아이디어"@ko .
+ex:hasContentElement a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:ContentElement ;
+    rdfs:label "내용 요소"@ko .
+ex:developsCompetency a owl:ObjectProperty ;
+    rdfs:domain ex:Subject ; rdfs:range ex:Competency ;
+    rdfs:label "함양 역량"@ko .
+ex:relatedToArea a owl:ObjectProperty ;
+    rdfs:domain ex:LearningArea ; rdfs:range ex:LearningArea ;
+    rdfs:label "관련 영역"@ko .
+ex:gradeBand a owl:DatatypeProperty ;
+    rdfs:domain ex:ContentElement ; rdfs:range xsd:string ;
+    rdfs:label "학년군"@ko .
+ex:description a owl:DatatypeProperty ;
+    rdfs:range xsd:string ; rdfs:label "설명"@ko .
+
+# --- OWL: 의미 제약 및 관계 ---
+ex:LearningArea owl:disjointWith ex:CoreIdea, ex:ContentElement, ex:Competency .
+ex:CoreIdea owl:disjointWith ex:ContentElement, ex:Competency .
+ex:KnowledgeUnderstanding owl:disjointWith ex:ProcessSkill, ex:ValueAttitude .
+ex:ProcessSkill owl:disjointWith ex:ValueAttitude .
+ex:ScienceSubject a owl:Class ;
+    rdfs:subClassOf ex:Subject ,
+      [ a owl:Restriction ; owl:onProperty ex:hasArea ;
+        owl:qualifiedCardinality "5"^^xsd:nonNegativeInteger ;
+        owl:onClass ex:LearningArea ] .
+
+# --- RDF: 교과 및 영역 인스턴스 ---
+ex:Science a ex:Subject ;
+    rdfs:label "과학"@ko ;
+    ex:description "과학적 탐구를 통해 자연 현상과 일상생활을 이해하고 개인·사회 문제를 과학적으로 해결하는 소양을 기르는 교과"@ko ;
+    ex:hasArea ex:MotionEnergy, ex:Matter, ex:Life, ex:EarthSpace, ex:ScienceSociety ;
+    ex:developsCompetency ex:ScientificInquiryProblemSolving, ex:ScientificDecisionMaking,
+        ex:KnowledgeInformationProcessing, ex:CreativeThinking, ex:CollaborativeCommunication .
+
+ex:Science a ex:ScienceSubject .
+
+ex:MotionEnergy a ex:LearningArea ;
+    rdfs:label "운동과 에너지"@ko ;
+    ex:hasCoreIdea ex:MotionCoreIdea, ex:ElectricMagneticCoreIdea, ex:HeatCoreIdea, ex:LightWaveCoreIdea ;
+    ex:hasContentElement ex:Force, ex:Speed, ex:Gravity, ex:Buoyancy, ex:WorkEnergy, ex:ElectricCurrent, ex:Voltage, ex:HeatTransfer, ex:ReflectionRefraction ;
+    ex:relatedToArea ex:Matter, ex:ScienceSociety .
+
+ex:Matter a ex:LearningArea ;
+    rdfs:label "물질"@ko ;
+    ex:hasCoreIdea ex:MatterStateCoreIdea, ex:ChemicalReactionEnergyCoreIdea, ex:MaterialPropertiesCoreIdea, ex:ChemicalChangeCoreIdea ;
+    ex:hasContentElement ex:ParticleMotion, ex:GasPressure, ex:Density, ex:Solubility, ex:PureSubstanceMixture, ex:ChemicalEquation, ex:ConservationOfMass, ex:AtomMoleculeIon ;
+    ex:relatedToArea ex:MotionEnergy, ex:Life .
+
+ex:Life a ex:LearningArea ;
+    rdfs:label "생명"@ko ;
+    ex:hasCoreIdea ex:CellOrganizationCoreIdea, ex:PhotosynthesisRespirationCoreIdea, ex:StimulusResponseCoreIdea, ex:InheritanceCoreIdea, ex:BiodiversityCoreIdea ;
+    ex:hasContentElement ex:CellStructure, ex:Photosynthesis, ex:Respiration, ex:NervousSystem, ex:HormoneHomeostasis, ex:CellDivision, ex:Inheritance, ex:Biodiversity ;
+    ex:relatedToArea ex:EarthSpace, ex:ScienceSociety .
+
+ex:EarthSpace a ex:LearningArea ;
+    rdfs:label "지구와 우주"@ko ;
+    ex:hasCoreIdea ex:EarthSystemCoreIdea, ex:GeologicChangeCoreIdea, ex:WaterCycleCoreIdea, ex:ClimateCoreIdea, ex:SolarSystemCoreIdea, ex:StarObservationCoreIdea ;
+    ex:hasContentElement ex:EarthSystem, ex:RockCycle, ex:PlateTectonics, ex:AtmosphereOcean, ex:ClimateChange, ex:SolarSystem, ex:MoonPhases, ex:UniverseExpansion ;
+    ex:relatedToArea ex:Life, ex:ScienceSociety .
+
+ex:ScienceSociety a ex:LearningArea ;
+    rdfs:label "과학과 사회"@ko ;
+    ex:hasCoreIdea ex:ScienceHealthSafetyCoreIdea, ex:SustainableSocietyCoreIdea, ex:ScienceCareerCoreIdea ;
+    ex:hasContentElement ex:DiseasePrevention, ex:DisasterResponse, ex:EfficientResourceUse, ex:SustainableEnergy, ex:ScienceTechnologySociety, ex:ScienceCareer ;
+    ex:relatedToArea ex:MotionEnergy, ex:Matter, ex:Life, ex:EarthSpace .
+
+# 핵심 아이디어: 원문 문장을 요약해 자원으로 구성
+ex:MotionCoreIdea a ex:CoreIdea ; ex:description "힘은 물체의 속력과 운동 방향을 변화시키며 운동은 힘과 에너지로 예측할 수 있다."@ko .
+ex:ElectricMagneticCoreIdea a ex:CoreIdea ; ex:description "전하와 전류는 전기·자기 현상을 일으키며 전기 기구의 작동 원리에 활용된다."@ko .
+ex:HeatCoreIdea a ex:CoreIdea ; ex:description "열은 온도가 높은 곳에서 낮은 곳으로 이동하며 단열 등 여러 분야에 이용된다."@ko .
+ex:LightWaveCoreIdea a ex:CoreIdea ; ex:description "빛과 소리는 반사·굴절·진동 등 파동의 특성을 가진다."@ko .
+ex:MatterStateCoreIdea a ex:CoreIdea ; ex:description "물질은 여러 상태로 존재하고 입자의 운동에 따라 상태와 물리적 성질이 변한다."@ko .
+ex:ChemicalReactionEnergyCoreIdea a ex:CoreIdea ; ex:description "물질의 상태 변화와 화학 반응에는 에너지 출입이 수반된다."@ko .
+ex:MaterialPropertiesCoreIdea a ex:CoreIdea ; ex:description "물질의 고유한 특성은 물질을 구분하고 혼합물을 분리하는 데 이용된다."@ko .
+ex:ChemicalChangeCoreIdea a ex:CoreIdea ; ex:description "화학 반응을 통해 물질은 다른 물질로 변한다."@ko .
+ex:CellOrganizationCoreIdea a ex:CoreIdea ; ex:description "생물은 세포로 이루어지고 구성 단계가 유기적으로 연관되어 있다."@ko .
+ex:PhotosynthesisRespirationCoreIdea a ex:CoreIdea ; ex:description "식물은 광합성으로 양분을 만들고 생물은 호흡으로 생명 활동에 필요한 에너지를 얻는다."@ko .
+ex:StimulusResponseCoreIdea a ex:CoreIdea ; ex:description "동물은 자극을 받아들이고 신경계와 호르몬의 작용으로 반응한다."@ko .
+ex:InheritanceCoreIdea a ex:CoreIdea ; ex:description "유전자는 생물의 형질을 자손에게 전달하며 유전 현상은 가계에서도 관찰된다."@ko .
+ex:BiodiversityCoreIdea a ex:CoreIdea ; ex:description "생물은 환경과 상호작용하며 생물다양성은 생태계와 인간의 삶에 관련된다."@ko .
+ex:EarthSystemCoreIdea a ex:CoreIdea ; ex:description "지구계 구성 요소는 상호작용하며 에너지와 물질을 교환한다."@ko .
+ex:GeologicChangeCoreIdea a ex:CoreIdea ; ex:description "암석·화석·지구 내부 탐구로 지구 환경과 생물의 변천을 밝힐 수 있다."@ko .
+ex:WaterCycleCoreIdea a ex:CoreIdea ; ex:description "물은 땅·바다·대기 사이를 순환하며 지표와 지하 구조를 변화시킨다."@ko .
+ex:ClimateCoreIdea a ex:CoreIdea ; ex:description "기후시스템은 태양 복사와 인간 활동 등의 영향을 받으며 기후변화는 지속가능성에 영향을 미친다."@ko .
+ex:SolarSystemCoreIdea a ex:CoreIdea ; ex:description "태양계는 행성과 소천체 등으로 구성되며 천체 표면은 생성 과정에 따라 다양하다."@ko .
+ex:StarObservationCoreIdea a ex:CoreIdea ; ex:description "별의 특성은 관측 자료와 증거 기반 해석으로 파악한다."@ko .
+ex:ScienceHealthSafetyCoreIdea a ex:CoreIdea ; ex:description "과학기술은 질병 예방과 재난 극복 등 인류 복지에 기여한다."@ko .
+ex:SustainableSocietyCoreIdea a ex:CoreIdea ; ex:description "자원과 에너지의 효율적 이용은 지속가능한 사회에 기여한다."@ko .
+ex:ScienceCareerCoreIdea a ex:CoreIdea ; ex:description "과학기술의 발달은 미래 사회와 직업에 영향을 미치며 진로 탐색을 돕는다."@ko .
+
+# 내용 요소(일부 예시)
+ex:Force a ex:KnowledgeUnderstanding ; rdfs:label "힘"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:Speed a ex:KnowledgeUnderstanding ; rdfs:label "속력"@ko ; ex:gradeBand "중학교 1~3학년"@ko .
+ex:Gravity a ex:KnowledgeUnderstanding ; rdfs:label "중력"@ko .
+ex:Buoyancy a ex:KnowledgeUnderstanding ; rdfs:label "부력"@ko .
+ex:WorkEnergy a ex:KnowledgeUnderstanding ; rdfs:label "일과 에너지"@ko .
+ex:ElectricCurrent a ex:KnowledgeUnderstanding ; rdfs:label "전류"@ko .
+ex:Voltage a ex:KnowledgeUnderstanding ; rdfs:label "전압"@ko .
+ex:HeatTransfer a ex:KnowledgeUnderstanding ; rdfs:label "열의 이동"@ko .
+ex:ReflectionRefraction a ex:KnowledgeUnderstanding ; rdfs:label "반사와 굴절"@ko .
+ex:ParticleMotion a ex:KnowledgeUnderstanding ; rdfs:label "입자 운동"@ko .
+ex:GasPressure a ex:KnowledgeUnderstanding ; rdfs:label "기체의 압력"@ko .
+ex:Density a ex:KnowledgeUnderstanding ; rdfs:label "밀도"@ko .
+ex:Solubility a ex:KnowledgeUnderstanding ; rdfs:label "용해도"@ko .
+ex:PureSubstanceMixture a ex:KnowledgeUnderstanding ; rdfs:label "순물질과 혼합물"@ko .
+ex:ChemicalEquation a ex:KnowledgeUnderstanding ; rdfs:label "화학 반응식"@ko .
+ex:ConservationOfMass a ex:KnowledgeUnderstanding ; rdfs:label "질량 보존 법칙"@ko .
+ex:AtomMoleculeIon a ex:KnowledgeUnderstanding ; rdfs:label "원자·분자·이온"@ko .
+ex:CellStructure a ex:KnowledgeUnderstanding ; rdfs:label "세포의 구조"@ko .
+ex:Photosynthesis a ex:KnowledgeUnderstanding ; rdfs:label "광합성"@ko .
+ex:Respiration a ex:KnowledgeUnderstanding ; rdfs:label "호흡"@ko .
+ex:NervousSystem a ex:KnowledgeUnderstanding ; rdfs:label "신경계"@ko .
+ex:HormoneHomeostasis a ex:KnowledgeUnderstanding ; rdfs:label "호르몬과 항상성"@ko .
+ex:CellDivision a ex:KnowledgeUnderstanding ; rdfs:label "세포분열"@ko .
+ex:Inheritance a ex:KnowledgeUnderstanding ; rdfs:label "유전 형질과 유전 원리"@ko .
+ex:Biodiversity a ex:KnowledgeUnderstanding ; rdfs:label "생물다양성"@ko .
+ex:EarthSystem a ex:KnowledgeUnderstanding ; rdfs:label "지구계"@ko .
+ex:RockCycle a ex:KnowledgeUnderstanding ; rdfs:label "암석의 순환"@ko .
+ex:PlateTectonics a ex:KnowledgeUnderstanding ; rdfs:label "판과 대륙이동설"@ko .
+ex:AtmosphereOcean a ex:KnowledgeUnderstanding ; rdfs:label "대기와 해양"@ko .
+ex:ClimateChange a ex:KnowledgeUnderstanding ; rdfs:label "기후변화"@ko .
+ex:SolarSystem a ex:KnowledgeUnderstanding ; rdfs:label "태양계 구성 천체"@ko .
+ex:MoonPhases a ex:KnowledgeUnderstanding ; rdfs:label "달의 위상 변화"@ko .
+ex:UniverseExpansion a ex:KnowledgeUnderstanding ; rdfs:label "우주 팽창"@ko .
+ex:DiseasePrevention a ex:KnowledgeUnderstanding ; rdfs:label "질병과 예방"@ko .
+ex:DisasterResponse a ex:KnowledgeUnderstanding ; rdfs:label "재해·재난에 대한 과학적 대처"@ko .
+ex:EfficientResourceUse a ex:KnowledgeUnderstanding ; rdfs:label "자원의 효율적인 이용"@ko .
+ex:SustainableEnergy a ex:KnowledgeUnderstanding ; rdfs:label "지속가능한 에너지 이용"@ko .
+ex:ScienceTechnologySociety a ex:KnowledgeUnderstanding ; rdfs:label "과학기술의 영향"@ko .
+ex:ScienceCareer a ex:KnowledgeUnderstanding ; rdfs:label "과학 관련 진로와 직업"@ko .
+
+# 과정·기능과 가치·태도
+ex:ScientificInquiryProblemSolving a ex:Competency ; rdfs:label "과학적 탐구와 문제해결 능력"@ko .
+ex:ScientificDecisionMaking a ex:Competency ; rdfs:label "과학적 의사결정 능력"@ko .
+ex:KnowledgeInformationProcessing a ex:Competency ; rdfs:label "지식정보처리 역량"@ko .
+ex:CreativeThinking a ex:Competency ; rdfs:label "창의적 사고 역량"@ko .
+ex:CollaborativeCommunication a ex:Competency ; rdfs:label "협력적 소통 역량"@ko .
+ex:RecognizeProblem a ex:ProcessSkill ; rdfs:label "문제 인식하기"@ko .
+ex:DesignInquiry a ex:ProcessSkill ; rdfs:label "탐구 설계하기"@ko .
+ex:CollectAnalyzeData a ex:ProcessSkill ; rdfs:label "자료 수집·분석하기"@ko .
+ex:DrawConclusion a ex:ProcessSkill ; rdfs:label "결론 도출하기"@ko .
+ex:CommunicateEvidence a ex:ProcessSkill ; rdfs:label "과학적 증거에 기반하여 주장하고 소통하기"@ko .
+ex:ScientificEthics a ex:ValueAttitude ; rdfs:label "과학 활동의 윤리성"@ko .
+ex:Openness a ex:ValueAttitude ; rdfs:label "과학 문제 해결에 대한 개방성"@ko .
+ex:SustainableParticipation a ex:ValueAttitude ; rdfs:label "안전·지속가능 사회에 기여"@ko .
+ex:EnjoyScienceCulture a ex:ValueAttitude ; rdfs:label "과학 문화 향유"@ko .
+
+ex:Science ex:developsCompetency ex:ScientificInquiryProblemSolving, ex:ScientificDecisionMaking .
+ex:Science ex:hasContentElement ex:RecognizeProblem, ex:DesignInquiry, ex:CollectAnalyzeData,
+    ex:DrawConclusion, ex:CommunicateEvidence, ex:ScientificEthics, ex:Openness,
+    ex:SustainableParticipation, ex:EnjoyScienceCulture .
